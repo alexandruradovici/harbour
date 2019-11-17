@@ -11,19 +11,35 @@ use chrono::prelude::*;
 
 use users;
 
+use super::Command;
+
 struct Options
 {
 	show_hidden_files: bool,
 	show_folder_and_parent: bool,
 	escape: bool,
 	show_long_listing: bool,
-	path: Vec<PathBuf>
+	path: Vec<PathBuf>,
+	show_inode: bool,
+	sort_by_filename: bool,
+	sort_by_size: bool,
+	reverse_order: bool
 }
 
 struct File
 {
 	filename: String,
 	metadata: fs::Metadata
+}
+
+fn sort_by_filename (files: & mut Vec<File>)
+{
+	files.sort_by (|a, b| a.filename.partial_cmp (&b.filename).unwrap());
+}
+
+fn sort_by_size (files: & mut Vec<File>)
+{
+	files.sort_by (|a, b| a.metadata.len().partial_cmp (&b.metadata.len()).unwrap());
 }
 
 fn arguments (args: &[String]) -> Result<Options, io::Error>
@@ -33,7 +49,11 @@ fn arguments (args: &[String]) -> Result<Options, io::Error>
 		show_folder_and_parent: false,
 		escape: false,
 		show_long_listing: false,
-		path: Vec::new ()
+		path: Vec::new (),
+		show_inode: false,
+		sort_by_filename: true,
+		sort_by_size: false,
+		reverse_order: false
 	};
 
 	let mut is_option = true;
@@ -55,6 +75,23 @@ fn arguments (args: &[String]) -> Result<Options, io::Error>
 			else
 			if arg == "-l" {
 				options.show_long_listing = true;
+			}
+			else
+			if arg == "-i" || arg == "--inode" {
+				options.show_inode = true;
+			}
+			else
+			if arg == "-f"  {
+				options.sort_by_filename = false;
+			}
+			else
+			if arg == "-s" || arg == "--size"  {
+				options.sort_by_filename = false;
+				options.sort_by_size = false;
+			}
+			else
+			if arg == "-r" || arg == "--reverse"  {
+				options.reverse_order = true;
 			}
 		}
 		else {
@@ -115,6 +152,16 @@ fn list_folder (path: &Path, options: &Options) -> Result<(), io::Error>
 	}
 
 	// files.sort ();
+	if options.sort_by_filename {
+		sort_by_filename (&mut files);
+	}
+	else
+	if options.sort_by_size {
+		sort_by_size (&mut files);
+	}
+	if options.reverse_order {
+		files.reverse ();
+	}
 	for f in files {
 		if options.show_long_listing {
 			if let Err(error) = print_long_listing (&f, &options) {
@@ -219,6 +266,15 @@ fn print_long_listing (f: &File, options: &Options) -> Result<(), io::Error>
 
 	println! ("{}{}  {}  {}  {}  {}  {}  {}", ftype, mode_string, f.metadata.nlink(), username, group, f.metadata.len(), mtime, filename(&f.filename, &options));
 	Ok (())
+}
+
+pub fn register () -> Command
+{
+	Command {
+		command: "ls",
+		description: "List directory contents",
+		run: &run
+	}
 }
 
 pub fn run (args: &[String]) -> Result<(), io::Error>
