@@ -280,6 +280,7 @@ pub fn register () -> Command
 pub fn run (args: &[String]) -> Result<(), io::Error>
 {
 	let options = arguments (args)?;
+	let mut errno = 0;
 	
 	for path in options.path.iter() {
 		if options.path.len () > 1 {
@@ -287,8 +288,20 @@ pub fn run (args: &[String]) -> Result<(), io::Error>
 		}
 		if let Err (error) = list_folder (&path, &options) {
 			eprintln! ("ls: {}: {}", path.display (), error);
+			if errno == 0 {
+				errno = match error.raw_os_error () {
+					Some (e) => e,
+					None => 1
+				}
+			}
 		}
 	}
 
-	Ok (())
+	if errno != 0 {
+		Err (io::Error::from_raw_os_error (errno))
+	}
+	else
+	{
+		Ok (())
+	}
 }
