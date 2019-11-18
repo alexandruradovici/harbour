@@ -8,10 +8,15 @@ use std::os::unix::fs::MetadataExt;
 use std::os::unix::fs::FileTypeExt;
 use std::os::unix::fs::PermissionsExt;
 use chrono::prelude::*;
+use tabular::{Table, Row};
 
 use users;
 
 use super::Command;
+
+const LONG_FORMAT:&str = "{:<}{:<}  {:>} {:<}  {:<}  {:>} {:>} ";
+const INODE_FORMAT:&str = "{:>} ";
+const FORMAT:&str = "{:<}";
 
 struct Options
 {
@@ -29,7 +34,8 @@ struct Options
 struct File
 {
 	filename: String,
-	metadata: fs::Metadata
+	metadata: fs::Metadata,
+	full_path: PathBuf
 }
 
 fn sort_by_filename (files: & mut Vec<File>)
@@ -122,19 +128,22 @@ fn list_folder (path: &Path, options: &Options) -> Result<(), io::Error>
 	{
 		files.push (File {
 			filename: String::from ("."),
-			metadata: fs::metadata (env::current_dir()?)?
+			metadata: fs::metadata (env::current_dir()?)?,
+			full_path: env::current_dir ()?.to_path_buf ()
 		});
 		if let Some (parent) = env::current_dir()?.parent() {
 			files.push (File {
 				filename: String::from (".."),
-				metadata: fs::metadata (parent)?
+				metadata: fs::metadata (parent)?,
+				full_path: parent.to_path_buf ()
 			});
 		}
 		else
 		{
 			files.push (File {
 				filename: String::from ("."),
-				metadata: fs::metadata (env::current_dir()?)?
+				metadata: fs::metadata (env::current_dir()?)?,
+				full_path: env::current_dir ()?.to_path_buf ()
 			});
 		}
 	}
@@ -143,9 +152,12 @@ fn list_folder (path: &Path, options: &Options) -> Result<(), io::Error>
 		let file = file?;
 		if let Some (filename) = file.path().file_name() {
 			if let Some (filename_str) = filename.to_str() {
+				let mut full_path = path.to_path_buf();
+				full_path.push (filename_str);
 				files.push (File {
 					filename: filename_str.to_string (),
-					metadata: file.metadata()?
+					metadata: file.metadata()?,
+					full_path: full_path
 				});
 			}
 		}
@@ -162,20 +174,42 @@ fn list_folder (path: &Path, options: &Options) -> Result<(), io::Error>
 	if options.reverse_order {
 		files.reverse ();
 	}
-	for f in files {
+
+	let mut format = FORMAT.to_string();
+	if options.show_long_listing {
+		format = format! ("{}{}", LONG_FORMAT, FORMAT);
+	}
+	if options.show_inode {
+		format = format! ("{}{}", INODE_FORMAT, format);
+	}
+
+	let mut table = Table::new (&format);
+
+	for mut f in files {
+		let mut row = Row::new ();
+		
+		if options.show_inode {
+			row.add_cell (f.metadata.ino());
+		}
 		if options.show_long_listing {
-			if let Err(error) = print_long_listing (&f, &options) {
+			if let Err(error) = print_long_listing (&mut row, &mut f, &options) {
 				eprintln! ("ls: {}", error);
+			}
+			else
+			{
+				row.add_cell (filename (&f.filename, &options));
 			}
 		}
 		else {
-			println! ("{} ", filename (&f.filename, &options));
+			row.add_cell (filename (&f.filename, &options));
 		}
+		table.add_row (row);
 	}
+	println! ("{}", table);
 	Ok (())
 }
 
-fn print_long_listing (f: &File, options: &Options) -> Result<(), io::Error>
+fn print_long_listing (row:&mut Row, f: &mut File, options: &Options) -> Result<(), io::Error>
 {
 	let mut ftype = '-';
 	let file_type = f.metadata.file_type ();
@@ -196,6 +230,10 @@ fn print_long_listing (f: &File, options: &Options) -> Result<(), io::Error>
 	}
 	else if file_type.is_symlink () {
 		ftype = 'l';
+		let link = fs::read_link (&f.full_path)?;
+		if let Some (link_str) = link.to_str () {
+			f.filename = format! ("{} -> {}", &f.filename, link_str.to_string());
+		}
 	}
 
 	let permissions = f.metadata.permissions ();
@@ -263,8 +301,9 @@ fn print_long_listing (f: &File, options: &Options) -> Result<(), io::Error>
 	let dt:DateTime<Local> = DateTime::from (f.metadata.modified()?);
 
 	let mtime = dt.format ("%d %b %H:%M");
-
-	println! ("{}{}  {}  {}  {}  {}  {}  {}", ftype, mode_string, f.metadata.nlink(), username, group, f.metadata.len(), mtime, filename(&f.filename, &options));
+	
+	// println! ("{}{}  {}  {}  {}  {}  {}  {}", ftype, mode_string, f.metadata.nlink(), username, group, f.metadata.len(), mtime, filename(&f.filename, &options));
+	row.add_cell (ftype).add_cell (mode_string).add_cell (f.metadata.nlink()).add_cell (username).add_cell (group).add_cell (f.metadata.len()).add_cell (mtime);
 	Ok (())
 }
 
