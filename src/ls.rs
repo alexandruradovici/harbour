@@ -28,7 +28,8 @@ struct Options
 	show_inode: bool,
 	sort_by_filename: bool,
 	sort_by_size: bool,
-	reverse_order: bool
+	reverse_order: bool,
+	show_file_type: bool
 }
 
 struct File
@@ -59,7 +60,8 @@ fn arguments (args: &[String]) -> Result<Options, io::Error>
 		show_inode: false,
 		sort_by_filename: true,
 		sort_by_size: false,
-		reverse_order: false
+		reverse_order: false,
+		show_file_type: false
 	};
 
 	let mut is_option = true;
@@ -98,6 +100,10 @@ fn arguments (args: &[String]) -> Result<Options, io::Error>
 			else
 			if arg == "-r" || arg == "--reverse"  {
 				options.reverse_order = true;
+			}
+			else
+			if arg == "-F" || arg == "-p" || arg == "--classify"  {
+				options.show_file_type = true;
 			}
 		}
 		else {
@@ -191,6 +197,31 @@ fn list_folder (path: &Path, options: &Options) -> Result<(), io::Error>
 		if options.show_inode {
 			row.add_cell (f.metadata.ino());
 		}
+
+		if options.show_file_type {
+			let mut ftype = ' ';
+			let file_type = f.metadata.file_type ();
+			if file_type.is_dir () {
+				ftype = '/';
+			}
+			else if file_type.is_fifo () {
+				ftype = '|';
+			}
+			else if file_type.is_socket () {
+				ftype = '=';
+			}
+			else if f.metadata.permissions().mode() & 0o111 != 0 {
+				ftype = '*';
+			}
+			else if file_type.is_symlink () && !options.show_long_listing {
+				ftype = '@';
+			}
+
+			if ftype != ' ' {
+				f.filename = format! ("{}{}", &f.filename, ftype);
+			}
+		}
+
 		if options.show_long_listing {
 			if let Err(error) = print_long_listing (&mut row, &mut f, &options) {
 				eprintln! ("ls: {}", error);
@@ -209,7 +240,7 @@ fn list_folder (path: &Path, options: &Options) -> Result<(), io::Error>
 	Ok (())
 }
 
-fn print_long_listing (row:&mut Row, f: &mut File, options: &Options) -> Result<(), io::Error>
+fn print_long_listing (row:&mut Row, f: &mut File, _options: &Options) -> Result<(), io::Error>
 {
 	let mut ftype = '-';
 	let file_type = f.metadata.file_type ();
