@@ -29,7 +29,8 @@ struct Options
 	sort_by_filename: bool,
 	sort_by_size: bool,
 	reverse_order: bool,
-	show_file_type: bool
+	show_file_type: bool,
+	show_numeric_uid_and_gid: bool
 }
 
 struct File
@@ -61,7 +62,8 @@ fn arguments (args: &[String]) -> Result<Options, io::Error>
 		sort_by_filename: true,
 		sort_by_size: false,
 		reverse_order: false,
-		show_file_type: false
+		show_file_type: false,
+		show_numeric_uid_and_gid: false
 	};
 
 	let mut is_option = true;
@@ -104,6 +106,10 @@ fn arguments (args: &[String]) -> Result<Options, io::Error>
 			else
 			if arg == "-F" || arg == "-p" || arg == "--classify"  {
 				options.show_file_type = true;
+			}
+			else
+			if arg == "-n" || arg == "--numeric-uid-gid"  {
+				options.show_numeric_uid_and_gid = true;
 			}
 		}
 		else {
@@ -240,7 +246,7 @@ fn list_folder (path: &Path, options: &Options) -> Result<(), io::Error>
 	Ok (())
 }
 
-fn print_long_listing (row:&mut Row, f: &mut File, _options: &Options) -> Result<(), io::Error>
+fn print_long_listing (row:&mut Row, f: &mut File, options: &Options) -> Result<(), io::Error>
 {
 	let mut ftype = '-';
 	let file_type = f.metadata.file_type ();
@@ -312,21 +318,33 @@ fn print_long_listing (row:&mut Row, f: &mut File, _options: &Options) -> Result
 	let mode_string:String = str_mode.into_iter().collect();
 
 	let uid = f.metadata.uid();
-	let username = match users::get_user_by_uid (uid) {
-		Some (user) => match user.name ().to_str() {
-			Some (username) => username.to_string(),
-			None => uid.to_string()
-		},
-		None => uid.to_string ()
+
+	let username = if !options.show_numeric_uid_and_gid {
+		match users::get_user_by_uid (uid) {
+			Some (user) => match user.name ().to_str() {
+				Some (username) => username.to_string(),
+				None => uid.to_string()
+			},
+			None => uid.to_string ()
+		}
+	}
+	else {
+		uid.to_string ()
 	};
 
 	let gid = f.metadata.gid();
-	let group = match users::get_group_by_gid (gid) {
-		Some (group) => match group.name ().to_str() {
-			Some (groupname) => groupname.to_string(),
-			None => gid.to_string()
-		},
-		None => gid.to_string ()
+
+	let group = if !options.show_numeric_uid_and_gid {
+		match users::get_group_by_gid (gid) {
+			Some (group) => match group.name ().to_str() {
+				Some (groupname) => groupname.to_string(),
+				None => gid.to_string()
+			},
+			None => gid.to_string ()
+		}
+	}
+	else {
+		gid.to_string ()
 	};
 
 	let dt:DateTime<Local> = DateTime::from (f.metadata.modified()?);
