@@ -8,6 +8,7 @@ use tabular::{Table, Row};
 mod pwd;
 mod ls;
 mod which;
+mod id;
 
 pub struct Command
 {
@@ -40,9 +41,11 @@ fn run_command (command: &str, args:&[String]) -> Result<(), std::io::Error>
     let pwd = pwd::register ();
     let ls = ls::register ();
     let which = which::register ();
+    let id = id::register ();
     commands.insert (pwd.command.to_string(), pwd);
     commands.insert (ls.command.to_string(), ls);
     commands.insert (which.command.to_string(), which);
+    commands.insert (id.command.to_string(), id);
 
     if command == "" {
         let mut table = Table::new ("   {:>}  {:<}");
