@@ -9,6 +9,7 @@ mod pwd;
 mod ls;
 mod which;
 mod id;
+mod ps;
 
 pub struct Command
 {
@@ -42,10 +43,12 @@ fn run_command (command: &str, args:&[String]) -> Result<(), std::io::Error>
     let ls = ls::register ();
     let which = which::register ();
     let id = id::register ();
+    let ps = ps::register ();
     commands.insert (pwd.command.to_string(), pwd);
     commands.insert (ls.command.to_string(), ls);
     commands.insert (which.command.to_string(), which);
     commands.insert (id.command.to_string(), id);
+    commands.insert (ps.command.to_string(), ps);
 
     if command == "" {
         let mut table = Table::new ("   {:>}  {:<}");
