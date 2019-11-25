@@ -12,25 +12,50 @@ use tabular::{Table, Row};
 
 use users;
 
+use structopt::StructOpt;
+
 use super::Command;
 
 const LONG_FORMAT:&str = "{:<}{:<}  {:>} {:<}  {:<}  {:>} {:>} ";
 const INODE_FORMAT:&str = "{:>} ";
 const FORMAT:&str = "{:<}";
 
+#[derive(StructOpt, Debug)]
+#[structopt(name = "ls", about="List directory contents")]
 struct Options
 {
+	#[structopt(short = "a", long = "all")]
 	show_hidden_files: bool,
+
+	#[structopt(short = "A", long = "almost-all")]
 	show_folder_and_parent: bool,
+
+	#[structopt(short = "b", long = "escape")]
 	escape: bool,
+
+	#[structopt(short = "l")]
 	show_long_listing: bool,
-	path: Vec<PathBuf>,
+
+	#[structopt(short = "i", long = "inode")]
 	show_inode: bool,
+
+	#[structopt(short = "f")]
 	sort_by_filename: bool,
+
+	#[structopt(short = "s", long = "size")]
 	sort_by_size: bool,
+
+	#[structopt(short = "r", long = "reverse")]
 	reverse_order: bool,
+
+	#[structopt(short = "F", short = "p", long = "classify")]
 	show_file_type: bool,
-	show_numeric_uid_and_gid: bool
+
+	#[structopt(short = "n", long = "numeric-uid-gid")]
+	show_numeric_uid_and_gid: bool,
+
+	#[structopt(name = "file", parse(from_str))]
+	path: Vec<PathBuf>
 }
 
 struct File
@@ -50,78 +75,75 @@ fn sort_by_size (files: & mut Vec<File>)
 	files.sort_by (|a, b| a.metadata.len().partial_cmp (&b.metadata.len()).unwrap());
 }
 
-fn arguments (args: &[String]) -> Result<Options, io::Error>
-{
-	let mut options: Options = Options {
-		show_hidden_files: false,
-		show_folder_and_parent: false,
-		escape: false,
-		show_long_listing: false,
-		path: Vec::new (),
-		show_inode: false,
-		sort_by_filename: true,
-		sort_by_size: false,
-		reverse_order: false,
-		show_file_type: false,
-		show_numeric_uid_and_gid: false
-	};
+// fn arguments (args: &[String]) -> Result<Options, io::Error>
+// {
+// 	let mut options: Options = Options {
+// 		show_hidden_files: false,
+// 		show_folder_and_parent: false,
+// 		escape: false,
+// 		show_long_listing: false,
+// 		path: Vec::new (),
+// 		show_inode: false,
+// 		sort_by_filename: true,
+// 		sort_by_size: false,
+// 		reverse_order: false,
+// 		show_file_type: false,
+// 		show_numeric_uid_and_gid: false
+// 	};
 
-	let mut is_option = true;
+// 	let mut is_option = true;
 
-	for arg in args {
-		if is_option && (arg.starts_with ("-") || arg.starts_with ("--")) {
-			if arg == "-a" || arg == "--all" {
-				options.show_hidden_files = true;
-				options.show_folder_and_parent = true;
-			}
-			else
-			if arg == "-A" || arg == "--almost-all" {
-				options.show_hidden_files = true;
-			}
-			else
-			if arg == "-b" || arg == "--escape" {
-				options.escape = true;
-			}
-			else
-			if arg == "-l" {
-				options.show_long_listing = true;
-			}
-			else
-			if arg == "-i" || arg == "--inode" {
-				options.show_inode = true;
-			}
-			else
-			if arg == "-f"  {
-				options.sort_by_filename = false;
-			}
-			else
-			if arg == "-s" || arg == "--size"  {
-				options.sort_by_filename = false;
-				options.sort_by_size = false;
-			}
-			else
-			if arg == "-r" || arg == "--reverse"  {
-				options.reverse_order = true;
-			}
-			else
-			if arg == "-F" || arg == "-p" || arg == "--classify"  {
-				options.show_file_type = true;
-			}
-			else
-			if arg == "-n" || arg == "--numeric-uid-gid"  {
-				options.show_numeric_uid_and_gid = true;
-			}
-		}
-		else {
-			is_option = false;			
-			options.path.push (PathBuf::from (arg));
-		}
-	}
-	if options.path.len() == 0 {
-		options.path.push (env::current_dir ()?);
-	}
-	Ok (options)
-}
+// 	for arg in args {
+// 		if is_option && (arg.starts_with ("-") || arg.starts_with ("--")) {
+// 			if arg == "-a" || arg == "--all" {
+// 				options.show_hidden_files = true;
+// 				options.show_folder_and_parent = true;
+// 			}
+// 			else
+// 			if arg == "-A" || arg == "--almost-all" {
+// 				options.show_hidden_files = true;
+// 			}
+// 			else
+// 			if arg == "-b" || arg == "--escape" {
+// 				options.escape = true;
+// 			}
+// 			else
+// 			if arg == "-l" {
+// 				options.show_long_listing = true;
+// 			}
+// 			else
+// 			if arg == "-i" || arg == "--inode" {
+// 				options.show_inode = true;
+// 			}
+// 			else
+// 			if arg == "-f"  {
+// 				options.sort_by_filename = false;
+// 			}
+// 			else
+// 			if arg == "-s" || arg == "--size"  {
+// 				options.sort_by_filename = false;
+// 				options.sort_by_size = false;
+// 			}
+// 			else
+// 			if arg == "-r" || arg == "--reverse"  {
+// 				options.reverse_order = true;
+// 			}
+// 			else
+// 			if arg == "-F" || arg == "-p" || arg == "--classify"  {
+// 				options.show_file_type = true;
+// 			}
+// 			else
+// 			if arg == "-n" || arg == "--numeric-uid-gid"  {
+// 				options.show_numeric_uid_and_gid = true;
+// 			}
+// 		}
+// 		else {
+// 			is_option = false;			
+// 			options.path.push (PathBuf::from (arg));
+// 		}
+// 	}
+// 	Ok (options)
+// }
 
 fn filename (filename: &str, options: &Options) -> String
 {
@@ -367,8 +389,12 @@ pub fn register () -> Command
 
 pub fn run (args: &[String]) -> Result<(), io::Error>
 {
-	let options = arguments (args)?;
+	let mut options = Options::from_iter (args.iter());
 	let mut errno = 0;
+
+	if options.path.len() == 0 {
+		options.path.push (env::current_dir ()?);
+	}
 	
 	for path in options.path.iter() {
 		if options.path.len () > 1 {

@@ -78,11 +78,11 @@ fn run_command (command: &str, args:&[String]) -> Result<(), std::io::Error>
 fn main() {
     let args:Vec<String> = env::args().collect ();
     let mut command = get_command (&args[0]);
-    let mut first_argument = 1;
+    let mut first_argument = 0;
     if command == "harbour" {
         if args.len () > 1 {
             command = get_command (&args[1]);
-            first_argument = 2;
+            first_argument = 1;
         }
         else
         {

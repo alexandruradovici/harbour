@@ -2,43 +2,26 @@ use std::io;
 use std::env;
 use std::fs;
 
+use structopt::StructOpt;
+
 use std::os::unix::fs::PermissionsExt;
 
-use super::Command;
 
-struct Options <'a> {
+/// A basic example
+#[derive(StructOpt, Debug)]
+#[structopt(name = "which", about="Locate a command")]
+struct Options {
+    #[structopt(short = "a", long = "--all")]
 	show_all: bool,
-	no_display: bool,
-	commands: Vec<&'a str>,
+	
+    #[structopt(short = "-s")]
+    no_display: bool,
+
+    #[structopt(name="command", parse(from_str))]
+    commands: Vec<String>
 }
 
-fn arguments (args: &[String]) -> Result<Options, io::Error> 
-{
-	let mut options: Options = Options {
-		show_all: false,
-		no_display: false,
-		commands: Vec::new ()
-	};
-
-	let mut is_option = true;
-
-	for arg in args {
-		if is_option && (arg.starts_with ("-")) {
-			if arg == "-a" {
-				options.show_all = true;
-			}
-			else
-			if arg == "-s" {
-				options.no_display = true;
-			}
-		}
-		else {
-			is_option = false;			
-			options.commands.push (&arg);
-		}
-	}
-	Ok (options)
-}
+use super::Command;
 
 fn get_paths () -> Vec<String>
 {
@@ -65,7 +48,7 @@ pub fn register () -> Command
 
 pub fn run (args: &[String]) -> Result<(), io::Error>
 {
-	let options = arguments (args)?;
+	let options = Options::from_iter (args.iter());
 	let mut errno = 0;
 
 	let paths = get_paths ();
