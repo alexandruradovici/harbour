@@ -1,18 +1,11 @@
 use std::io;
 use std::env;
 
-use super::Command;
+use super::command;
 
-pub fn register () -> (Command)
-{
-	Command {
-		command: "pwd", 
-		description: "Print the full filename of the current working directory",
-		run: &run
-	}
-}
+command! ("pwd", "Print the full filename of the current working directory", execute, );
 
-fn run (_args: &[String]) -> Result<(), io::Error>
+fn execute (options:Options) -> Result<(), io::Error>
 {
 	let current_dir = env::current_dir ()?;
 	println! ("{}", current_dir.display());

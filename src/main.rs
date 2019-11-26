@@ -5,6 +5,7 @@ use std::process::exit;
 use std::collections::HashMap;
 use tabular::{Table, Row};
 
+mod command;
 mod pwd;
 mod ls;
 mod which;
@@ -12,12 +13,7 @@ mod id;
 mod ps;
 mod mkdir;
 
-pub struct Command
-{
-    command: &'static str,
-    description: &'static str,
-    run: &'static dyn Fn(&[String]) -> Result<(), io::Error>
-}
+use command::Command;
 
 fn get_command (arg: &str) -> &str
 {
@@ -39,15 +35,17 @@ fn run_command (command: &str, args:&[String]) -> Result<(), std::io::Error>
 {
     let mut commands: HashMap <String, Command> = HashMap::new ();
 
+    
     // add commands
     let pwd = pwd::register ();
-    let ls = ls::register ();
+    register! (commands, ls);
+    // let ls = ls::register ();
     let which = which::register ();
     let id = id::register ();
     let ps = ps::register ();
     let mkdir = mkdir::register ();
     commands.insert (pwd.command.to_string(), pwd);
-    commands.insert (ls.command.to_string(), ls);
+    // commands.insert (ls.command.to_string(), ls);
     commands.insert (which.command.to_string(), which);
     commands.insert (id.command.to_string(), id);
     commands.insert (ps.command.to_string(), ps);

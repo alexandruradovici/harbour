@@ -1,145 +1,65 @@
 use std::io;
-use super::Command;
 
 use users;
 
-struct Options {
-	show_all: bool,
+use super::command;
+
+command! ("id", "Print information about USER or the current user", execute, 
+	(short = "n", help = "Print name instead of a number")
 	show_names: bool,
+
+	(short = "G", help = "Print supplementary group IDs")
 	show_groups: bool,
+
+	(short = "u", help = "Print user ID")
 	show_user_id: bool,
+
+	(short = "g", help = "Print group ID")
 	show_group_id: bool,
-	show_numbers: bool,
-	username: String
-}
 
-fn arguments (args: &[String]) -> Result<Options, io::Error> 
+	(short = "r", help = "Print real user ID instead of effective ID")
+	show_real_id: bool,
+
+	(help="The user name, leave empty for the current user")
+	username: Option<String>
+);
+
+pub fn execute (mut options: Options) -> Result<(), io::Error>
 {
-	let mut options: Options = Options {
-		show_all: true,
-		show_names: false,
-		show_groups: false,
-		show_user_id: false,
-		show_group_id: false,
-		show_numbers: false,
-		username: match users::get_effective_username () {
-			Some (username_os_str) => match username_os_str.to_str() {
-				Some (username) => username.to_string (),
-				None => String::from ("")
-			},
-			None => String::from ("")
+	let username = if let Some(username) = options.username {
+			username
 		}
-	};
-
-	let mut is_option = true;
-	let mut is_username = false;
-
-	for arg in args {
-		if is_option && (arg.starts_with ("-")) {
-			if arg == "-u" {
-				options.show_user_id = true;
-				options.show_all = false;
-				// TODO show error
+		else
+		{
+			let user = if options.show_real_id {
+				users::get_current_username ()
 			}
 			else
-			if arg == "-g" {
-				options.show_group_id = true;
-				options.show_all = false;
-				// TODO show error
-			}
-			else
-			if arg == "-r" {
-				options.username = match users::get_current_username () {
-					Some (username_os_str) => match username_os_str.to_str() {
-						Some (username) => username.to_string (),
-						None => String::from ("")
-					},
-					None => String::from ("")
-				};
-			}
-			else
-			if arg == "-G" {
-				options.show_groups = true;
-				options.show_all = false;
-				// TODO show error
-			}
-			else
-			if arg == "-n" {
-				options.show_numbers = true;
-				options.show_names = true;
-			}
-		}
-		else {
-			is_option = false;			
-			if !is_username {
-				options.username = arg.to_string();
-				is_username = false;
-			}
-		}
-	}
-	Ok (options)
-}
-
-pub fn register () -> Command
-{
-	Command {
-		command: "id",
-		description: "Print information about USER or the current user",
-		run: &run
-	}
-}
-
-pub fn run (args: &[String]) -> Result<(), io::Error>
-{
-	let options = arguments (args)?;
-	let mut errno = 0;
-
-	if let Some (user) = users::get_user_by_name (&options.username) {
-		if options.show_all {
-
-			let groupname = match users::get_group_by_gid (user.primary_group_id()) {
-				Some (group) => match group.name().to_str () {
-					Some (groupname) => groupname.to_string (),
+			{
+				users::get_effective_username ()
+			};
+			match user {
+				Some (username_os_str) => match username_os_str.to_str() {
+					Some (username) => username.to_string (),
 					None => String::from ("")
 				},
 				None => String::from ("")
-			};
-
-			print! ("uid={}({}) gid={}({}) ", user.uid(), &options.username, user.primary_group_id(), groupname);
-			if let Some (groups) = user.groups () {
-				let mut first_element = true;
-				for group in groups.iter () {
-					if group.gid () != user.primary_group_id () {
-						let groupname = match group.name ().to_str () {
-							Some (groupname) => groupname,
-							None => &""
-						};
-						if !first_element {
-							print! (",");
-						}
-						else
-						{
-							first_element = false;
-						}
-						print! ("{}({})", group.gid(), groupname);
-					}
-				}
 			}
-			println! ();
-		}
-		else
+		};
+	let mut errno = 0;
+	if let Some (user) = users::get_user_by_name (&username) {
 		if options.show_user_id {
-			if options.show_numbers {
+			if !options.show_names {
 				println! ("{}", user.uid ())
 			}
 			else
 			{
-				println! ("{}", &options.username);
+				println! ("{}", &username);
 			}
 		}
 		else 
 		if options.show_group_id {
-			if options.show_numbers {
+			if !options.show_names {
 				println! ("{}", user.primary_group_id ())
 			}
 			else
@@ -172,10 +92,43 @@ pub fn run (args: &[String]) -> Result<(), io::Error>
 			}
 			println! ();
 		}
+		else
+		{
+
+			let groupname = match users::get_group_by_gid (user.primary_group_id()) {
+				Some (group) => match group.name().to_str () {
+					Some (groupname) => groupname.to_string (),
+					None => String::from ("")
+				},
+				None => String::from ("")
+			};
+
+			print! ("uid={}({}) gid={}({}) ", user.uid(), &username, user.primary_group_id(), groupname);
+			if let Some (groups) = user.groups () {
+				let mut first_element = true;
+				for group in groups.iter () {
+					if group.gid () != user.primary_group_id () {
+						let groupname = match group.name ().to_str () {
+							Some (groupname) => groupname,
+							None => &""
+						};
+						if !first_element {
+							print! (",");
+						}
+						else
+						{
+							first_element = false;
+						}
+						print! ("{}({})", group.gid(), groupname);
+					}
+				}
+			}
+			println! ();
+		}
 	}
 	else
 	{
-		eprintln! ("id: {}: no such user", options.username);
+		eprintln! ("id: {}: no such user", &username);
 		errno = 1;
 	}
 

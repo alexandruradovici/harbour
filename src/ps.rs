@@ -2,12 +2,7 @@ use std::fs;
 use std::io;
 use std::os::unix::fs::MetadataExt;
 
-use super::Command;
-
-struct Options
-{
-
-}
+use super::command;
 
 #[derive(Debug)]
 struct Process
@@ -112,18 +107,10 @@ fn arguments (args: &[String]) -> Result<Options, io::Error>
 	Ok (options)
 }
 
-pub fn register () -> Command
-{
-	Command {
-		command: "ps",
-		description: "Report process status",
-		run: &run
-	}
-}
+command! ("ps", "Report process status", execute, );
 
-pub fn run (args: &[String]) -> Result<(), io::Error>
+pub fn execute (options:Options) -> Result<(), io::Error>
 {
-	let options = arguments (args)?;
 	let mut errno = 0;
 
 	read_processes (&options);

@@ -10,53 +10,15 @@ use std::os::unix::fs::PermissionsExt;
 use chrono::prelude::*;
 use tabular::{Table, Row};
 
+use super::command;
+
 use users;
-
-use structopt::StructOpt;
-
-use super::Command;
 
 const LONG_FORMAT:&str = "{:<}{:<}  {:>} {:<}  {:<}  {:>} {:>} ";
 const INODE_FORMAT:&str = "{:>} ";
 const FORMAT:&str = "{:<}";
 
-#[derive(StructOpt, Debug)]
-#[structopt(name = "ls", about="List directory contents")]
-struct Options
-{
-	#[structopt(short = "a", long = "all")]
-	show_hidden_files: bool,
-
-	#[structopt(short = "A", long = "almost-all")]
-	show_folder_and_parent: bool,
-
-	#[structopt(short = "b", long = "escape")]
-	escape: bool,
-
-	#[structopt(short = "l")]
-	show_long_listing: bool,
-
-	#[structopt(short = "i", long = "inode")]
-	show_inode: bool,
-
-	#[structopt(short = "f")]
-	sort_by_filename: bool,
-
-	#[structopt(short = "s", long = "size")]
-	sort_by_size: bool,
-
-	#[structopt(short = "r", long = "reverse")]
-	reverse_order: bool,
-
-	#[structopt(short = "F", short = "p", long = "classify")]
-	show_file_type: bool,
-
-	#[structopt(short = "n", long = "numeric-uid-gid")]
-	show_numeric_uid_and_gid: bool,
-
-	#[structopt(name = "file", parse(from_str))]
-	path: Vec<PathBuf>
-}
+const COMMAND: &str = "ls";
 
 struct File
 {
@@ -182,19 +144,37 @@ fn list_folder (path: &Path, options: &Options) -> Result<(), io::Error>
 		}
 	}
 
-	for file in fs::read_dir (path)? {
-		let file = file?;
-		if let Some (filename) = file.path().file_name() {
+	if path.is_dir () {
+		for file in fs::read_dir (path)? {
+			let file = file?;
+			if let Some (filename) = file.path().file_name() {
+				if let Some (filename_str) = filename.to_str() {
+					let mut full_path = path.to_path_buf();
+					full_path.push (filename_str);
+					files.push (File {
+						filename: filename_str.to_string (),
+						metadata: file.metadata()?,
+						full_path: full_path
+					});
+				}
+			}
+		}
+	}
+	else if path.is_file () {
+		if let Some (filename) = path.file_name() {
 			if let Some (filename_str) = filename.to_str() {
 				let mut full_path = path.to_path_buf();
-				full_path.push (filename_str);
 				files.push (File {
 					filename: filename_str.to_string (),
-					metadata: file.metadata()?,
+					metadata: fs::symlink_metadata(&full_path)?,
 					full_path: full_path
 				});
 			}
 		}
+	}
+	else
+	{
+
 	}
 
 	// files.sort ();
@@ -378,18 +358,46 @@ fn print_long_listing (row:&mut Row, f: &mut File, options: &Options) -> Result<
 	Ok (())
 }
 
-pub fn register () -> Command
-{
-	Command {
-		command: "ls",
-		description: "List directory contents",
-		run: &run
-	}
-}
+command! ("ls", "List directory(s) contents", execute, 
+	(short = "a", long = "all", help = "Don't hide entries starting with .")
+	show_hidden_files: bool,
 
-pub fn run (args: &[String]) -> Result<(), io::Error>
+	(short = "A", long = "almost-all", help = "Don't list . and ..")
+	show_folder_and_parent: bool,
+
+	(short = "b", long = "escape", help = "Escape names")
+	escape: bool,
+
+	(short = "l", help = "Long listing format")
+	show_long_listing: bool,
+
+	(short = "i", long = "inode", help = "List inode numbers")
+	show_inode: bool,
+
+	(short = "f", help = "Sort by file name")
+	sort_by_filename: bool,
+
+	(short = "s", long = "size", help = "Sort by file size")
+	sort_by_size: bool,
+
+	(short = "r", long = "reverse", help = "Sort in reverse order")
+	reverse_order: bool,
+
+	(short = "F", long = "classify", help = "Append indicator (one of */=@|) to entries")
+	show_file_type: bool,
+
+	(short = "p", help = "Append indicator (one of */=@|) to entries")
+	show_file_type_dir: bool,
+
+	(short = "n", long = "numeric-uid-gid", help = "List numeric UIDs and GIDs instead of names")
+	show_numeric_uid_and_gid: bool,
+
+	(name = "file", parse(from_str), help = "Files or directories to show")
+	path: Vec<PathBuf>
+);
+
+fn execute (mut options:Options) -> Result <(), io::Error>
 {
-	let mut options = Options::from_iter (args.iter());
 	let mut errno = 0;
 
 	if options.path.len() == 0 {
@@ -397,7 +405,7 @@ pub fn run (args: &[String]) -> Result<(), io::Error>
 	}
 	
 	for path in options.path.iter() {
-		if options.path.len () > 1 {
+		if options.path.len () > 1 && path.is_dir () {
 			println! ("{}:", path.display());
 		}
 		if let Err (error) = list_folder (&path, &options) {
