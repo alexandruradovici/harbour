@@ -18,8 +18,6 @@ const LONG_FORMAT:&str = "{:<}{:<}  {:>} {:<}  {:<}  {:>} {:>} ";
 const INODE_FORMAT:&str = "{:>} ";
 const FORMAT:&str = "{:<}";
 
-const COMMAND: &str = "ls";
-
 struct File
 {
 	filename: String,
