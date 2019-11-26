@@ -43,7 +43,7 @@ command! ("name", "Description of the command", execute,
 
 pub fn execute (mut options: Options) -> Result<(), io::Error>
 {
-	let mut errno = 0;
+    let mut errno = 0;
 	
     // ... the command's code is here
 
