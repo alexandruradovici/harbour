@@ -1,5 +1,5 @@
-# harbour
-Standard UNIX shell commands written in Rust and inspired by BusyBox.
+# Harbour Shell
+Standard Linux shell commands written in Rust and inspired by BusyBox.
 
 ## Design 
 Harbour is composed out of *commands*. Each command is a rust module residing the the main crate.
