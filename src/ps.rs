@@ -1,13 +1,20 @@
 use std::fs;
 use std::io;
 use std::os::unix::fs::MetadataExt;
+use std::fmt;
+use std::error::Error;
 
 use tabular::{Table, Row};
+
+use users;
+
+use super::util::system;
 
 use super::command;
 
 #[derive(Debug)]
 struct TTY {
+	nr: u32,
 	major: u8,
 	minor: u32,
 	name: String
@@ -24,7 +31,8 @@ struct Process
     command: String,
 	uid: u32,
 	gid: u32,
-	tty: TTY
+	tty: TTY,
+	time: u32
 }
 
 fn read_process_name<'a> (statline:&'a str) -> Option<&'a str>
@@ -37,6 +45,20 @@ fn read_process_name<'a> (statline:&'a str) -> Option<&'a str>
 	{
 		None
 	}
+}
+
+fn read_self_tty_nr () -> u32
+{
+	if let Ok (stat) = fs::read_to_string ("/proc/self/stat") {
+		if let Some(pindex) = stat.find (')') {
+			let stat_list:Vec<&str> = (&stat[pindex+2..]).split (" ").collect ();
+			// tty
+			if let Ok (tty_nr) = stat_list[4].parse::<u32> () {
+				return tty_nr;
+			} 
+		} 
+	}
+	0
 }
 
 fn read_process_tty (pid:u64) -> Option<String> {
@@ -66,10 +88,12 @@ fn create_process (pid:u64) -> Process {
 		uid: 0,
 		gid: 0,
 		tty: TTY {
+			nr: 0,
 			major: 0,
 			minor: 0,
 			name: String::from ("?")
-		}
+		},
+		time: 0
 	};
 	// command
 	match fs::read_to_string (format!("/proc/{}/cmdline", pid)) {
@@ -110,10 +134,15 @@ fn create_process (pid:u64) -> Process {
 			}
 			// tty
 			if let Ok (tty_nr) = stat_list[4].parse::<u32> () {
+				process.tty.nr = tty_nr;
 				process.tty.major = ((tty_nr >> 8) & 0xFF) as u8;
 				process.tty.minor = (tty_nr >> 20) + (tty_nr & 0xFF);
 				// println! ("pid {}, tty_nr {}, {} {}", pid, tty_nr, major, minor);
-			} 
+			}
+			// time
+			if let (Ok (utime), Ok (stime)) = (stat_list[10].parse::<u32> (), stat_list[11].parse::<u32> ()) {
+				process.time = (utime + stime) / system::sysconf (system::_SC_CLK_TCK).unwrap_or (1) as u32;
+			}
 		} 
 	}
 	// uid and gid
@@ -128,9 +157,25 @@ fn create_process (pid:u64) -> Process {
 	process
 }
 
-fn read_processes (_options: &Options) -> Result<Vec<Process>, io::Error>
+fn read_processes (options: &Options) -> Result<Vec<Process>, io::Error>
 {
 	let mut processes:Vec<Process> = Vec::new ();
+	let self_uid = if let Some(username) = &options.username {
+			if let Some (user) = users::get_user_by_name (username)
+			{
+				user.uid()
+			}
+			else
+			{
+				eprintln! ("ps: username {}  does not exist", username);
+				Err(io::Error::from_raw_os_error (1))?
+			}
+		}
+		else
+		{
+			users::get_effective_uid ()
+		};
+	let self_tty_nr = read_self_tty_nr ();
     for process in fs::read_dir ("/proc")? {
 		let process = process?;
 		let path = process.path ();
@@ -138,7 +183,10 @@ fn read_processes (_options: &Options) -> Result<Vec<Process>, io::Error>
 			if let Some (pid_str) = path.file_name().expect("Unable to read procfs filesystem").to_str() {
 				if let Ok (pid) = pid_str.parse::<u64> () {
 					// println! ("{}", pid_str);
-					processes.push (create_process (pid));
+					let process = create_process (pid);
+					if options.show_all || options.username != None || (process.uid == self_uid && process.tty.nr == self_tty_nr) {
+						processes.push (process);
+					}
 				}
 			}
 		}
@@ -147,9 +195,15 @@ fn read_processes (_options: &Options) -> Result<Vec<Process>, io::Error>
 	Ok (processes)
 }
 
-command! ("ps", "Report process status", execute, 
+command! ("ps", "Report process status", execute,
 	(name= "column,...", short = "o", help = "Columns for display")
-	columns:Option<String>
+	columns:Option<String>,
+
+	(short="a", help = "Show all processes")
+	show_all: bool,
+
+	(short = "u", help = "Show processes only for a user")
+	username:Option<String>
 );
 
 pub fn execute (options:Options) -> Result<(), io::Error>
@@ -179,17 +233,20 @@ pub fn execute (options:Options) -> Result<(), io::Error>
 				"cmd" => {
 					row.add_cell ("COMMAND");
 					"{:<}"
-				}
+				},
 				"uid" => {
 					row.add_cell ("UID");
 					"{:>}"
 				},
-				"tty" => {
-					row.add_cell ("TTY");
-					"{:<}"
-				}
+				// "tty" => {
+				// 	row.add_cell ("TTY");
+				// 	"{:<}"
+				// },
+				/*
+				the default is UPPERCASE and {:<} format
+				*/
 				_ => {
-					row.add_cell ("");
+					row.add_cell (column.to_uppercase ());
 					"{:<}"
 				}
 			}
@@ -208,6 +265,7 @@ pub fn execute (options:Options) -> Result<(), io::Error>
 				"cmd" => row.add_cell (&process.name),
 				"uid" => row.add_cell (process.uid),
 				"tty" => row.add_cell (&process.tty.name),
+				"time" => row.add_cell (format! ("{:0>2}:{:0>2}:{:0>2}", process.time / 3600, (process.time % 3600) / 60, process.time % 60)),
 				_ => row.add_cell ("?")
 			};
 		}
@@ -215,7 +273,7 @@ pub fn execute (options:Options) -> Result<(), io::Error>
 		table.add_row (row);
 	}
 
-	// println! ("{}", table);
+	println! ("{}", table);
 
 	if errno != 0 {
 		Err (io::Error::from_raw_os_error (errno))

@@ -6,6 +6,7 @@ use std::collections::HashMap;
 use tabular::{Table, Row};
 
 mod command;
+mod util;
 mod pwd;
 mod ls;
 mod which;
