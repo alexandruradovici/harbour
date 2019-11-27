@@ -79,3 +79,122 @@ fn run_command (command: &str, args:&[String]) -> Result<(), std::io::Error>
     /// ... the rest of the run_command function
 }
 ````
+
+## Available Commands
+
+These commands are implemented so far
+
+Name | Description
+------- | -----------------
+*id* | Print information about USER or the current user
+*ls* | List directory(s) contents
+*mkdir* | Create directory
+*ps* | Report process status
+*pwd* | Print the full filename of the current working directory
+*which* | Locate a command
+
+### id
+Print information about USER or the current user
+
+```
+USAGE:
+    id [FLAGS] [username]
+
+FLAGS:
+    -h, --help       Prints help information
+    -g               Print group ID
+    -G               Print supplementary group IDs
+    -n               Print name instead of a number
+    -r               Print real user ID instead of effective ID
+    -u               Print user ID
+    -V, --version    Prints version information
+
+ARGS:
+    <username>    The user name, leave empty for the current user
+```
+
+### ls
+List directory(s) contents
+
+```
+USAGE:
+    ls [FLAGS] [file]...
+
+FLAGS:
+    -b, --escape             Escape names
+    -h, --help               Prints help information
+    -r, --reverse            Sort in reverse order
+    -F, --classify           Append indicator (one of */=@|) to entries
+    -p                       Append indicator (one of */=@|) to entries
+    -A, --almost-all         Don't list . and ..
+    -a, --all                Don't hide entries starting with .
+    -i, --inode              List inode numbers
+    -l                       Long listing format
+    -n, --numeric-uid-gid    List numeric UIDs and GIDs instead of names
+    -f                       Sort by file name
+    -s, --size               Sort by file size
+    -V, --version            Prints version information
+
+ARGS:
+    <file>...    Files or directories to show
+```
+
+### mkdir
+Create directory
+
+```
+USAGE:
+    mkdir [FLAGS] [path]...
+
+FLAGS:
+    -p               No error if exists; make parent directories as needed
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <path>...    directories to create
+```
+
+### ps
+Report process status
+
+```
+USAGE:
+    ps [OPTIONS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -o <column,...>        Columns for display
+```
+
+### pwd
+Print the full filename of the current working directory
+
+```
+USAGE:
+    pwd
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+```
+
+### which
+Locate a command
+
+```
+USAGE:
+    which [FLAGS] [command]...
+
+FLAGS:
+    -h, --help       Prints help information
+    -s               Slient mode, only return the error code
+    -a, --all        Show all commands
+    -V, --version    Prints version information
+
+ARGS:
+    <command>...    Commands to locate
+```
