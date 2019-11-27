@@ -24,7 +24,7 @@ command! ("id", "Print information about USER or the current user", execute,
 	username: Option<String>
 );
 
-pub fn execute (mut options: Options) -> Result<(), io::Error>
+pub fn execute (options: Options) -> Result<(), io::Error>
 {
 	let username = if let Some(username) = options.username {
 			username

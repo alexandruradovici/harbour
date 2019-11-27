@@ -147,13 +147,15 @@ fn list_folder (path: &Path, options: &Options) -> Result<(), io::Error>
 			let file = file?;
 			if let Some (filename) = file.path().file_name() {
 				if let Some (filename_str) = filename.to_str() {
-					let mut full_path = path.to_path_buf();
-					full_path.push (filename_str);
-					files.push (File {
-						filename: filename_str.to_string (),
-						metadata: file.metadata()?,
-						full_path: full_path
-					});
+					if options.show_hidden_files || &filename_str[0..1] != "." {
+						let mut full_path = path.to_path_buf();
+						full_path.push (filename_str);
+						files.push (File {
+							filename: filename_str.to_string (),
+							metadata: file.metadata()?,
+							full_path: full_path
+						});
+					}
 				}
 			}
 		}
@@ -161,7 +163,7 @@ fn list_folder (path: &Path, options: &Options) -> Result<(), io::Error>
 	else if path.is_file () {
 		if let Some (filename) = path.file_name() {
 			if let Some (filename_str) = filename.to_str() {
-				let mut full_path = path.to_path_buf();
+				let full_path = path.to_path_buf();
 				files.push (File {
 					filename: filename_str.to_string (),
 					metadata: fs::symlink_metadata(&full_path)?,
@@ -204,7 +206,7 @@ fn list_folder (path: &Path, options: &Options) -> Result<(), io::Error>
 			row.add_cell (f.metadata.ino());
 		}
 
-		if options.show_file_type {
+		if options.show_file_type || options.show_file_type_dir {
 			let mut ftype = ' ';
 			let file_type = f.metadata.file_type ();
 			if file_type.is_dir () {

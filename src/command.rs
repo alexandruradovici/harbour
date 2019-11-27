@@ -25,7 +25,7 @@ macro_rules! command {
 
         pub fn run (args: &[String]) -> Result<(), io::Error>
         {
-            let mut options = Options::from_iter (args.iter());
+            let options = Options::from_iter (args.iter());
             // println! ("{:?}", options);
             return $run (options)
         }

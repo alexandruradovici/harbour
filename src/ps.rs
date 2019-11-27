@@ -7,6 +7,13 @@ use tabular::{Table, Row};
 use super::command;
 
 #[derive(Debug)]
+struct TTY {
+	major: u8,
+	minor: u32,
+	name: String
+}
+
+#[derive(Debug)]
 struct Process
 {
     pid:u64,
@@ -17,7 +24,7 @@ struct Process
     command: String,
 	uid: u32,
 	gid: u32,
-	tty: String
+	tty: TTY
 }
 
 fn read_process_name<'a> (statline:&'a str) -> Option<&'a str>
@@ -58,7 +65,11 @@ fn create_process (pid:u64) -> Process {
 		command: String::from (""),
 		uid: 0,
 		gid: 0,
-		tty: String::from ("?")
+		tty: TTY {
+			major: 0,
+			minor: 0,
+			name: String::from ("?")
+		}
 	};
 	// command
 	match fs::read_to_string (format!("/proc/{}/cmdline", pid)) {
@@ -68,7 +79,7 @@ fn create_process (pid:u64) -> Process {
 				process.kernel_thread = true;
 			}
 		},
-		Err (e) => process.kernel_thread = true
+		Err (_e) => process.kernel_thread = true
 	};
 	// read the stat
 	if let Ok (stat) = fs::read_to_string (format!("/proc/{}/stat", pid)) {
@@ -99,9 +110,9 @@ fn create_process (pid:u64) -> Process {
 			}
 			// tty
 			if let Ok (tty_nr) = stat_list[4].parse::<u32> () {
-				let major = (tty_nr >> 8) & 0xFF;
-				let minor = (tty_nr >> 20) + (tty_nr & 0xFF);
-				println! ("pid {}, tty_nr {}, {} {}", pid, tty_nr, major, minor);
+				process.tty.major = ((tty_nr >> 8) & 0xFF) as u8;
+				process.tty.minor = (tty_nr >> 20) + (tty_nr & 0xFF);
+				// println! ("pid {}, tty_nr {}, {} {}", pid, tty_nr, major, minor);
 			} 
 		} 
 	}
@@ -112,7 +123,7 @@ fn create_process (pid:u64) -> Process {
 	}
 	// tty
 	if let Some(tty) = read_process_tty (pid) {
-		process.tty = tty;
+		process.tty.name = tty;
 	};
 	process
 }
@@ -141,7 +152,7 @@ command! ("ps", "Report process status", execute,
 	columns:Option<String>
 );
 
-pub fn execute (mut options:Options) -> Result<(), io::Error>
+pub fn execute (options:Options) -> Result<(), io::Error>
 {
 	let mut errno = 0;
 
@@ -196,7 +207,7 @@ pub fn execute (mut options:Options) -> Result<(), io::Error>
 				"pid" => row.add_cell (process.pid),
 				"cmd" => row.add_cell (&process.name),
 				"uid" => row.add_cell (process.uid),
-				"tty" => row.add_cell (&process.tty),
+				"tty" => row.add_cell (&process.tty.name),
 				_ => row.add_cell ("?")
 			};
 		}
