@@ -13,6 +13,7 @@ mod which;
 mod id;
 mod ps;
 mod mkdir;
+mod sleep;
 
 use command::Command;
 
@@ -38,19 +39,13 @@ fn run_command (command: &str, args:&[String]) -> Result<(), std::io::Error>
 
     
     // add commands
-    let pwd = pwd::register ();
+    register! (commands, pwd);
     register! (commands, ls);
-    // let ls = ls::register ();
-    let which = which::register ();
-    let id = id::register ();
-    let ps = ps::register ();
-    let mkdir = mkdir::register ();
-    commands.insert (pwd.command.to_string(), pwd);
-    // commands.insert (ls.command.to_string(), ls);
-    commands.insert (which.command.to_string(), which);
-    commands.insert (id.command.to_string(), id);
-    commands.insert (ps.command.to_string(), ps);
-    commands.insert (mkdir.command.to_string(), mkdir);
+    register! (commands, which);
+    register! (commands, id);
+    register! (commands, ps);
+    register! (commands, mkdir);
+    register! (commands, sleep);
 
     if command == "" {
         let mut table = Table::new ("   {:>}  {:<}");
