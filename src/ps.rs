@@ -1,8 +1,6 @@
 use std::fs;
 use std::io;
 use std::os::unix::fs::MetadataExt;
-use std::fmt;
-use std::error::Error;
 
 use tabular::{Table, Row};
 
@@ -99,7 +97,7 @@ fn create_process (pid:u64) -> Process {
 	match fs::read_to_string (format!("/proc/{}/cmdline", pid)) {
 		Ok (command) => {
 			process.command = command;
-			if (process.command.len() == 0) {
+			if process.command.len() == 0 {
 				process.kernel_thread = true;
 			}
 		},
@@ -256,21 +254,27 @@ pub fn execute (options:Options) -> Result<(), io::Error>
 	let mut table = Table::new (&format);
 	table.add_row (row);
 
-	for process in processes {
-		let mut row = Row::new ();
+	if processes.len () > 0 {
+		for process in processes {
+			let mut row = Row::new ();
 
-		for column in columns.iter () {
-			match column.as_ref () {
-				"pid" => row.add_cell (process.pid),
-				"cmd" => row.add_cell (&process.name),
-				"uid" => row.add_cell (process.uid),
-				"tty" => row.add_cell (&process.tty.name),
-				"time" => row.add_cell (format! ("{:0>2}:{:0>2}:{:0>2}", process.time / 3600, (process.time % 3600) / 60, process.time % 60)),
-				_ => row.add_cell ("?")
-			};
+			for column in columns.iter () {
+				match column.as_ref () {
+					"pid" => row.add_cell (process.pid),
+					"cmd" => row.add_cell (&process.name),
+					"uid" => row.add_cell (process.uid),
+					"tty" => row.add_cell (&process.tty.name),
+					"time" => row.add_cell (format! ("{:0>2}:{:0>2}:{:0>2}", process.time / 3600, (process.time % 3600) / 60, process.time % 60)),
+					_ => row.add_cell ("?")
+				};
+			}
+			
+			table.add_row (row);
 		}
-		
-		table.add_row (row);
+	}
+	else
+	{
+		errno = 1;
 	}
 
 	println! ("{}", table);
