@@ -93,6 +93,7 @@ Name | Description
 *mkdir* | Create directory
 *ps* | Report process status
 *pwd* | Print the full filename of the current working directory
+*sleep* | Suspend execution for an interval of time
 *which* | Locate a command
 
 ### id
