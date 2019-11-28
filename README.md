@@ -24,6 +24,8 @@ The *command!* macro will generate:
 ````rust
 use super::command;
 
+use std::io;
+
 command! ("name", "Description of the command", execute, 
 	(short = "o", long = "option", help = "Option description")
 	option: bool,
@@ -74,7 +76,7 @@ fn run_command (command: &str, args:&[String]) -> Result<(), std::io::Error>
     
     /// ... register other commands
 
-    register! (new_command, commands);
+    register! (commands, new_command);
     
     /// ... the rest of the run_command function
 }
@@ -180,6 +182,22 @@ USAGE:
 FLAGS:
     -h, --help       Prints help information
     -V, --version    Prints version information
+```
+
+### sleep
+Suspend execution for an interval of time
+
+```
+USAGE:
+    sleep <interval>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <interval>    the interval to suspend execution (default in seconds), optional suffixes are (s)econds,
+                  (m)inutes, (h)ours, (d)ays
 ```
 
 ### which
