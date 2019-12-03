@@ -3,6 +3,7 @@ name = "harbour"
 version = "0.1.0"
 authors = ["Alexandru Radovici <msg4alex@gmail.com>"]
 edition = "2018"
+build = "src/docks/build.rs"
 
 [dependencies]
 snailquote = "0.2.0"
@@ -11,3 +12,8 @@ users = "0.9"
 tabular = "0.1.2"
 structopt = "0.3"
 libc = "0.2.65"
+lalrpop-util = "0.17.2"
+regex = "1.3.1"
+
+[build-dependencies]
+lalrpop = { git = "https://github.com/alexandruradovici/lalrpop.git", rev="a5b3f7c" }
