@@ -1,6 +1,6 @@
 use std::io;
 
-mod docks_rules;
+mod sh_rules;
 
 use super::command;
 
@@ -12,7 +12,7 @@ pub fn execute (options: Options) -> Result<(), io::Error>
 {
 	let mut errno = 0;
 
-    let command = docks_rules::CommandParser::new().parse("S= 2 ls1$(p p2 | E=1 s s2) 5435243|ls3");
+    let command = sh_rules::CommandParser::new().parse("S=${PRINT}-\\ 2 ls1'$(p p2 | \\'E=1 s s2)' 5435243|ls3");
 
 	match command {
         Ok (s) => println! ("{}", s),

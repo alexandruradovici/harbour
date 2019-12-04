@@ -5,12 +5,26 @@ use std::str::FromStr;
 grammar;
 
 match {
-    r"[[:alpha:]_[:digit:]]+" => WORD,
+    r#"(?:[^\s'"\\$\(\)\{\}><\&\|2&]|\\.|2[^>])*"# => WORD,
+    r"'(?:[^'\\]|\\.)*'" => SINGLE_QUOTES_WORD,
     "=" => EQUAL,
     "$" => EXPAND,
     "(" => LP,
     ")" => RP,
-    "|" => PIPE
+    "{" => LB,
+    "}" => RB,
+    "|" => PIPE,
+    "||" => OR,
+    "&" => BACKGROUND,
+    "&&" => AND,
+    ">" => OUTPUT_REDIRECT,
+    "2>" => ERROR_REDIRECT,
+    "&>" => OUTPUT_ERROR_REDIRECT,
+    "<" => INPUT_REDIRECT,
+    ">>" => OUTPUT_REDIRECT_APPEND,
+    "2>>" => ERROR_REDIRECT_APPEND,
+    "&>>" => OUTPUT_ERROR_REDIRECT_APPEND,
+    ";" => SEQUENCE
 } else {
     r"[[:digit:]]+" => NUMBER,
     r"\s+" => WS
@@ -63,6 +77,10 @@ Word: String = {
         println! ("{}", w);
         w.to_string()
     },
+    <sq: SINGLE_QUOTES_WORD> => {
+        println! ("(single quotes {})", sq);
+        sq.to_string()
+    },
     <e:Expand> => e
 };
 
@@ -71,9 +89,13 @@ Expand: String = {
         println! ("(expand {})", w);
         format! ("(expand {})", w)
     },
+    EXPAND LB <w:WORD> RB => {
+        println! ("(expand {})", w);
+        format! ("(expand {})", w)
+    },
     EXPAND LP <s:Command> RP => {
-        println! ("(expand ({}))", s);
-        format! ("(expand ({}))", s)
+        println! ("(exe ({}))", s);
+        format! ("(exe ({}))", s)
     }
 };
 

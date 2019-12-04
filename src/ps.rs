@@ -7,6 +7,7 @@ use tabular::{Table, Row};
 use users;
 
 use super::util::system;
+use super::util::tty;
 
 use super::command;
 
@@ -206,6 +207,7 @@ command! ("ps", "Report process status", execute,
 
 pub fn execute (options:Options) -> Result<(), io::Error>
 {
+	tty::read_drivers ();
 	let mut errno = 0;
 
 	let columns:Vec<&str> = if let Some (columns) = &options.columns {

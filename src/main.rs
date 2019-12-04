@@ -15,7 +15,7 @@ mod ps;
 mod mkdir;
 mod sleep;
 mod rmdir;
-mod docks;
+mod sh;
 
 use command::Command;
 
@@ -45,7 +45,7 @@ fn run_command (command: &str, args:&[String]) -> Result<(), std::io::Error>
     register! (commands, ls);
     register! (commands, which);
     register! (commands, id);
-    register! (commands, docks);
+    register! (commands, sh);
     register! (commands, ps);
     register! (commands, mkdir);
     register! (commands, sleep);

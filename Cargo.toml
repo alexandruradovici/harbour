@@ -3,7 +3,7 @@ name = "harbour"
 version = "0.1.0"
 authors = ["Alexandru Radovici <msg4alex@gmail.com>"]
 edition = "2018"
-build = "src/docks/build.rs"
+build = "src/sh/build.rs"
 
 [dependencies]
 snailquote = "0.2.0"
