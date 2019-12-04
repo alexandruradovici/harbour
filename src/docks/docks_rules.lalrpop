@@ -1,0 +1,82 @@
+use std::str::FromStr;
+
+#[LALR]
+#[no_skip_whitespace]
+grammar;
+
+match {
+    r"[[:alpha:]_[:digit:]]+" => WORD,
+    "=" => EQUAL,
+    "$" => EXPAND,
+    "(" => LP,
+    ")" => RP,
+    "|" => PIPE
+} else {
+    r"[[:digit:]]+" => NUMBER,
+    r"\s+" => WS
+}
+
+pub Command: String = {
+    <s1:SimpleCommand> PIPE <s2:SimpleCommand>=> format! ("(command1 {}) | (command2 {})", s1, s2),
+    <s1:SimpleCommand> PIPE WS <s2:SimpleCommand>=> format! ("(command1 {}) | (command2 {})", s1, s2),
+    <s:SimpleCommand> => format! ("{}", s)
+};
+
+SimpleCommand: String = {
+    <e:SimpleCommandElement> => format! ("(command {}) (parameters)", e),
+    <e:SimpleCommandElement> WS <p:Params> => format! ("(command {}) (parameters {})", e, p)
+};
+
+SimpleCommandElement: String = {
+    <w:Words> => w,
+    <a:Assignment> WS <s:SimpleCommandElement> => format! ("(assign {}) {}", a, s)
+}
+
+Params: String = {
+    => String::from(""),
+    <w:Words> => {
+        println! ("(parameter {})", w);
+        format! ("(parameter {})", w)
+    },
+    <w:Words> WS <p:Params> => {
+        println! ("(parameter {}) {}", w, p);
+        format! ("(parameter {}) {}", w, p)
+    }
+}
+
+Assignment: String = {
+    <w1:WORD> EQUAL <w2:Words> => format! ("{} := {}", w1, w2),
+    <w:WORD> EQUAL => format! ("{} := ()", w)
+};
+
+Words: String = {
+    <w:Word> => w,
+    <w:Word><e:Words> => 
+    {
+        println! ("(words (word {}) {})", w, e);
+        format! ("(word {}) {}", w, e)
+    }
+}
+
+Word: String = {
+    <w:WORD> => {
+        println! ("{}", w);
+        w.to_string()
+    },
+    <e:Expand> => e
+};
+
+Expand: String = {
+    EXPAND <w:WORD> => {
+        println! ("(expand {})", w);
+        format! ("(expand {})", w)
+    },
+    EXPAND LP <s:Command> RP => {
+        println! ("(expand ({}))", s);
+        format! ("(expand ({}))", s)
+    }
+};
+
+
+
+
