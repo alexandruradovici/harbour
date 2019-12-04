@@ -1,11 +1,12 @@
 use std::str::FromStr;
+use crate::sh::sh_ast::{Command, Word, Words, Assignment, Assignments, Parameters, OpCommand};
 
 #[LALR]
 #[no_skip_whitespace]
 grammar;
 
 match {
-    r#"(?:[^\s'"\\$\(\)\{\}><\&\|2&]|\\.|2[^>])*"# => WORD,
+    r#"(?:[^\s'"\\$\(\)\{\}><\&\|&=]|\\.)*"# => WORD,
     r"'(?:[^'\\]|\\.)*'" => SINGLE_QUOTES_WORD,
     "=" => EQUAL,
     "$" => EXPAND,
@@ -30,72 +31,135 @@ match {
     r"\s+" => WS
 }
 
-pub Command: String = {
-    <s1:SimpleCommand> PIPE <s2:SimpleCommand>=> format! ("(command1 {}) | (command2 {})", s1, s2),
-    <s1:SimpleCommand> PIPE WS <s2:SimpleCommand>=> format! ("(command1 {}) | (command2 {})", s1, s2),
-    <s:SimpleCommand> => format! ("{}", s)
+pub Command: Box<Command> = {
+    <s1:Command> SEQUENCE <s2:PipeCommand>=> Box::new (Command::SequentialCommand (s1, s2)),
+    <s1:Command> SEQUENCE WS <s2:PipeCommand>=> Box::new (Command::SequentialCommand (s1, s2)),
+    <s:PipeCommand> => s
 };
 
-SimpleCommand: String = {
-    <e:SimpleCommandElement> => format! ("(command {}) (parameters)", e),
-    <e:SimpleCommandElement> WS <p:Params> => format! ("(command {}) (parameters {})", e, p)
+PipeCommand: Box<Command> = {
+    <s1:PipeCommand> PIPE <s2:AndOrCommand>=> Box::new (Command::PipeCommand (s1, s2)),
+    <s1:PipeCommand> PIPE WS <s2:AndOrCommand>=> Box::new (Command::PipeCommand (s1, s2)),
+    <s:AndOrCommand> => s
 };
 
-SimpleCommandElement: String = {
-    <w:Words> => w,
-    <a:Assignment> WS <s:SimpleCommandElement> => format! ("(assign {}) {}", a, s)
-}
+AndOrCommand: Box<Command> = {
+    <s1:AndOrCommand> AND <s2:SimpleCommand>=> Box::new (Command::AndOrCommand(s1, s2, OpCommand::AND)),
+    <s1:AndOrCommand> AND WS <s2:SimpleCommand>=> Box::new (Command::AndOrCommand(s1, s2, OpCommand::AND)),
+    <s1:AndOrCommand> OR <s2:SimpleCommand>=> Box::new (Command::AndOrCommand(s1, s2, OpCommand::OR)),
+    <s1:AndOrCommand> OR WS <s2:SimpleCommand>=> Box::new (Command::AndOrCommand(s1, s2, OpCommand::OR)),
+    <s:SimpleCommand> => s
+};
 
-Params: String = {
-    => String::from(""),
-    <w:Words> => {
-        println! ("(parameter {})", w);
-        format! ("(parameter {})", w)
+SimpleCommand: Box<Command> = {
+    <a:Assignments> WS <mut w:Words> => {
+        let s = Box::new (Command::SimpleCommand {
+            assignments: a,
+            words: Box::new (w),
+            parameters: Box::new (Parameters::new ())
+        });
+        s
+    },
+    <a:Assignments> WS <w:Words> WS <p:Params> => {
+        let s = Box::new (Command::SimpleCommand {
+            assignments: a,
+            words: Box::new (w),
+            parameters: p
+        });
+        s
+    },
+    <mut w:Words> => {
+        let s = Box::new (Command::SimpleCommand {
+            assignments: Box::new (Assignments::new ()),
+            words: Box::new (w),
+            parameters: Box::new (Parameters::new ())
+        });
+        s
     },
     <w:Words> WS <p:Params> => {
-        println! ("(parameter {}) {}", w, p);
-        format! ("(parameter {}) {}", w, p)
+        let s = Box::new (Command::SimpleCommand {
+            assignments: Box::new (Assignments::new ()),
+            words: Box::new (w),
+            parameters: p
+        });
+        s
     }
-}
-
-Assignment: String = {
-    <w1:WORD> EQUAL <w2:Words> => format! ("{} := {}", w1, w2),
-    <w:WORD> EQUAL => format! ("{} := ()", w)
 };
 
-Words: String = {
-    <w:Word> => w,
-    <w:Word><e:Words> => 
-    {
-        println! ("(words (word {}) {})", w, e);
-        format! ("(word {}) {}", w, e)
+Params: Box<Parameters> = {
+    => Box::new (Parameters::new ()),
+    <w:Words> => {
+        let mut p = Box::new (Parameters::new ());
+        (*p).push (w);
+        p
+    },
+    <w:Words> WS <mut p:Params> => {
+        (*p).insert (0, w);
+        p
     }
 }
 
-Word: String = {
+Assignments: Box<Assignments> = {
+    <mut n:Assignments> WS <a:Assignment> => {
+        (*n).insert (0, a);
+        n
+    },
+    <a:Assignment> => {
+        let mut n = Box::new (Assignments::new ());
+        (*n).push (a);
+        n
+    }
+};
+
+Assignment: Assignment = {
+    <w1:WORD> EQUAL <w2:Words> => {
+        let a = Assignment {
+            variable: w1.to_string (),
+            values: Box::new (w2)
+        };
+        a
+    },
+    <w:WORD> EQUAL => {
+        let a = Assignment {
+            variable: w.to_string (),
+            values: Box::new (Words::new ())
+        };
+        a
+    }
+};
+
+Words: Words = {
+    <w:Word> => {
+        let mut words = Words::new ();
+        words.push (w);
+        words
+    },
+    <w:Word><mut e:Words> => 
+    {
+        e.insert (0, w);
+        e
+    }
+}
+
+Word: Word = {
     <w:WORD> => {
-        println! ("{}", w);
-        w.to_string()
+        Word::Word (w.to_string())
     },
     <sq: SINGLE_QUOTES_WORD> => {
-        println! ("(single quotes {})", sq);
-        sq.to_string()
+        Word::Word(sq[1..sq.len()-1].to_string())
     },
     <e:Expand> => e
 };
 
-Expand: String = {
+Expand: Word = {
     EXPAND <w:WORD> => {
-        println! ("(expand {})", w);
-        format! ("(expand {})", w)
+        Word::Expand (w.to_string())
     },
     EXPAND LB <w:WORD> RB => {
-        println! ("(expand {})", w);
-        format! ("(expand {})", w)
+        Word::Expand (w.to_string())
     },
     EXPAND LP <s:Command> RP => {
-        println! ("(exe ({}))", s);
-        format! ("(exe ({}))", s)
+        Word::Execute (s)
     }
 };
 

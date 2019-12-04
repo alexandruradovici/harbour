@@ -1,10 +1,11 @@
 use std::io;
 
+mod sh_ast;
 mod sh_rules;
 
 use super::command;
 
-command! ("docks", "The shell", execute, 
+command! ("sh", "The shell", execute, 
 	
 );
 
@@ -12,10 +13,10 @@ pub fn execute (options: Options) -> Result<(), io::Error>
 {
 	let mut errno = 0;
 
-    let command = sh_rules::CommandParser::new().parse("S=${PRINT}-\\ 2 ls1'$(p p2 | \\'E=1 s s2)' 5435243|ls3");
+    let command = sh_rules::CommandParser::new().parse("p1 | p2 | s ; E=$1 s2");
 
 	match command {
-        Ok (s) => println! ("{}", s),
+        Ok (s) => println! ("{:#?}", s),
         Err (e) => eprintln! ("{}", e)
     };
 
