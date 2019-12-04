@@ -14,6 +14,7 @@ mod id;
 mod ps;
 mod mkdir;
 mod sleep;
+mod rmdir;
 
 use command::Command;
 
@@ -46,6 +47,7 @@ fn run_command (command: &str, args:&[String]) -> Result<(), std::io::Error>
     register! (commands, ps);
     register! (commands, mkdir);
     register! (commands, sleep);
+    register! (commands, rmdir);
 
     if command == "" {
         let mut table = Table::new ("   {:>}  {:<}");

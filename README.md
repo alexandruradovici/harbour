@@ -93,6 +93,7 @@ Name | Description
 *mkdir* | Create directory
 *ps* | Report process status
 *pwd* | Print the full filename of the current working directory
+*rmdir* | Remove directory(s) if they are empty
 *sleep* | Suspend execution for an interval of time
 *which* | Locate a command
 
@@ -183,6 +184,22 @@ USAGE:
 FLAGS:
     -h, --help       Prints help information
     -V, --version    Prints version information
+```
+
+### rmdir
+Remove directory(s) if they are empty
+
+```
+USAGE:
+    rmdir [FLAGS] [path]...
+
+FLAGS:
+    -h, --help       Prints help information
+    -p, --parents    Include empty parents
+    -V, --version    Prints version information
+
+ARGS:
+    <path>...    directories to remove
 ```
 
 ### sleep
