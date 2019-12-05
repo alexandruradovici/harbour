@@ -13,7 +13,7 @@ pub fn execute (options: Options) -> Result<(), io::Error>
 {
 	let mut errno = 0;
 
-    let command = sh_rules::CommandParser::new().parse("p1 | p2 | s ; E=$1 s2");
+    let command = sh_rules::CommandParser::new().parse("p1 | p2 | s ; E= s3>$12>4 s2");
 
 	match command {
         Ok (s) => println! ("{:#?}", s),

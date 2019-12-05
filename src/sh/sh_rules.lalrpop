@@ -1,5 +1,5 @@
 use std::str::FromStr;
-use crate::sh::sh_ast::{Command, Word, Words, Assignment, Assignments, Parameters, OpCommand};
+use crate::sh::sh_ast::*;
 
 #[LALR]
 #[no_skip_whitespace]
@@ -31,106 +31,99 @@ match {
     r"\s+" => WS
 }
 
-pub Command: Box<Command> = {
-    <s1:Command> SEQUENCE <s2:PipeCommand>=> Box::new (Command::SequentialCommand (s1, s2)),
-    <s1:Command> SEQUENCE WS <s2:PipeCommand>=> Box::new (Command::SequentialCommand (s1, s2)),
+pub Command: CommandPtr = {
+    <s1:Command> SEQUENCE <s2:PipeCommand>=> CommandPtr::new (Command::SequentialCommand (s1, s2)),
+    <s1:Command> SEQUENCE WS <s2:PipeCommand>=> CommandPtr::new (Command::SequentialCommand (s1, s2)),
     <s:PipeCommand> => s
 };
 
-PipeCommand: Box<Command> = {
-    <s1:PipeCommand> PIPE <s2:AndOrCommand>=> Box::new (Command::PipeCommand (s1, s2)),
-    <s1:PipeCommand> PIPE WS <s2:AndOrCommand>=> Box::new (Command::PipeCommand (s1, s2)),
+PipeCommand: CommandPtr = {
+    <s1:PipeCommand> PIPE <s2:AndOrCommand>=> CommandPtr::new (Command::PipeCommand (s1, s2)),
+    <s1:PipeCommand> PIPE WS <s2:AndOrCommand>=> CommandPtr::new (Command::PipeCommand (s1, s2)),
     <s:AndOrCommand> => s
 };
 
-AndOrCommand: Box<Command> = {
-    <s1:AndOrCommand> AND <s2:SimpleCommand>=> Box::new (Command::AndOrCommand(s1, s2, OpCommand::AND)),
-    <s1:AndOrCommand> AND WS <s2:SimpleCommand>=> Box::new (Command::AndOrCommand(s1, s2, OpCommand::AND)),
-    <s1:AndOrCommand> OR <s2:SimpleCommand>=> Box::new (Command::AndOrCommand(s1, s2, OpCommand::OR)),
-    <s1:AndOrCommand> OR WS <s2:SimpleCommand>=> Box::new (Command::AndOrCommand(s1, s2, OpCommand::OR)),
+AndOrCommand: CommandPtr = {
+    <s1:AndOrCommand> AND <s2:SimpleCommand>=> CommandPtr::new (Command::AndOrCommand(s1, s2, OpCommand::AND)),
+    <s1:AndOrCommand> AND WS <s2:SimpleCommand>=> CommandPtr::new (Command::AndOrCommand(s1, s2, OpCommand::AND)),
+    <s1:AndOrCommand> OR <s2:SimpleCommand>=> CommandPtr::new (Command::AndOrCommand(s1, s2, OpCommand::OR)),
+    <s1:AndOrCommand> OR WS <s2:SimpleCommand>=> CommandPtr::new (Command::AndOrCommand(s1, s2, OpCommand::OR)),
     <s:SimpleCommand> => s
 };
 
-SimpleCommand: Box<Command> = {
-    <a:Assignments> WS <mut w:Words> => {
-        let s = Box::new (Command::SimpleCommand {
+SimpleCommand: CommandPtr = {
+    <a:Assignments> WS <p:Params> => {
+        let redirects:WordsPtr = WordsPtr::new (Words::new ());
+        // for parameter in p.iter() {
+        //     get_redirects (redirects, parameter);
+        // }
+        let s = CommandPtr::new (Command::SimpleCommand {
             assignments: a,
-            words: Box::new (w),
-            parameters: Box::new (Parameters::new ())
+            parameters: p,
+            redirects: redirects
         });
         s
     },
-    <a:Assignments> WS <w:Words> WS <p:Params> => {
-        let s = Box::new (Command::SimpleCommand {
-            assignments: a,
-            words: Box::new (w),
-            parameters: p
-        });
-        s
-    },
-    <mut w:Words> => {
-        let s = Box::new (Command::SimpleCommand {
-            assignments: Box::new (Assignments::new ()),
-            words: Box::new (w),
-            parameters: Box::new (Parameters::new ())
-        });
-        s
-    },
-    <w:Words> WS <p:Params> => {
-        let s = Box::new (Command::SimpleCommand {
-            assignments: Box::new (Assignments::new ()),
-            words: Box::new (w),
-            parameters: p
+    <mut p:Params> => {
+        let redirects:WordsPtr = WordsPtr::new (Words::new ());
+        // for parameter in p.iter() {
+        //     get_redirects (redirects, parameter);
+        // }
+        let s = CommandPtr::new (Command::SimpleCommand {
+            assignments:AssignmentsPtr::new (Assignments::new ()),
+            parameters: p,
+            redirects: redirects
         });
         s
     }
 };
 
-Params: Box<Parameters> = {
-    => Box::new (Parameters::new ()),
+Params: WordsPtr = {
+    => WordsPtr::new (Words::new ()),
     <w:Words> => {
-        let mut p = Box::new (Parameters::new ());
-        (*p).push (w);
+        let mut p = WordsPtr::new (Words::new ());
+        p.push (w);
         p
     },
     <w:Words> WS <mut p:Params> => {
-        (*p).insert (0, w);
+        p.insert (0, w);
         p
-    }
+    },
+    
 }
 
-Assignments: Box<Assignments> = {
+Assignments: AssignmentsPtr = {
     <mut n:Assignments> WS <a:Assignment> => {
         (*n).insert (0, a);
         n
     },
     <a:Assignment> => {
-        let mut n = Box::new (Assignments::new ());
+        let mut n = AssignmentsPtr::new (Assignments::new ());
         (*n).push (a);
         n
     }
 };
 
-Assignment: Assignment = {
+Assignment: AssignmentPtr = {
     <w1:WORD> EQUAL <w2:Words> => {
-        let a = Assignment {
+        let a = AssignmentPtr::new (Assignment {
             variable: w1.to_string (),
-            values: Box::new (w2)
-        };
+            values: w2
+        });
         a
     },
     <w:WORD> EQUAL => {
-        let a = Assignment {
+        let a = AssignmentPtr::new (Assignment {
             variable: w.to_string (),
-            values: Box::new (Words::new ())
-        };
+            values: WordsPtr::new (Words::new ())
+        });
         a
     }
 };
 
-Words: Words = {
+Words: WordsPtr = {
     <w:Word> => {
-        let mut words = Words::new ();
+        let mut words = WordsPtr::new (Words::new ());
         words.push (w);
         words
     },
@@ -138,31 +131,77 @@ Words: Words = {
     {
         e.insert (0, w);
         e
+    },
+    <r:Redirect> => {
+        let mut words = WordsPtr::new (Words::new ());
+        words.push (WordPtr::new (Word::Redirection (r)));
+        words
     }
 }
 
-Word: Word = {
+Redirect: Box<Redirect> = {
+    OUTPUT_REDIRECT <w:Words> => {
+        let r = Box::new (Redirect::Output {
+            words: w,
+            append: false
+        });
+        r
+    },
+    ERROR_REDIRECT <w:Words> => {
+        let r = Box::new (Redirect::Error {
+            words: w,
+            append: false
+        });
+        r
+    },
+    OUTPUT_REDIRECT_APPEND <w:Words> => {
+        let r = Box::new (Redirect::Output {
+            words: w,
+            append: true
+        });
+        r
+    },
+    ERROR_REDIRECT_APPEND <w:Words> => {
+        let r = Box::new (Redirect::Error {
+            words: w,
+            append: true
+        });
+        r
+    },
+    OUTPUT_ERROR_REDIRECT_APPEND <w:Words> => {
+        let r = Box::new (Redirect::OutputAndError {
+            words: w,
+            append: true
+        });
+        r
+    },
+    OUTPUT_ERROR_REDIRECT <w:Words> => {
+        let r = Box::new (Redirect::OutputAndError {
+            words: w,
+            append: false
+        });
+        r
+    }
+}
+
+Word: WordPtr = {
     <w:WORD> => {
-        Word::Word (w.to_string())
+        WordPtr::new (Word::Word (w.to_string()))
     },
     <sq: SINGLE_QUOTES_WORD> => {
-        Word::Word(sq[1..sq.len()-1].to_string())
+        WordPtr::new (Word::Word(sq[1..sq.len()-1].to_string()))
     },
     <e:Expand> => e
 };
 
-Expand: Word = {
+Expand: WordPtr = {
     EXPAND <w:WORD> => {
-        Word::Expand (w.to_string())
+        WordPtr::new (Word::Expand (w.to_string()))
     },
     EXPAND LB <w:WORD> RB => {
-        Word::Expand (w.to_string())
+        WordPtr::new (Word::Expand (w.to_string()))
     },
     EXPAND LP <s:Command> RP => {
-        Word::Execute (s)
+        WordPtr::new (Word::Execute (s))
     }
 };
-
-
-
-
