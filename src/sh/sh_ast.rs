@@ -21,8 +21,7 @@ pub enum Redirect {
 pub enum Word {
     Word (String),
     Expand (String),
-    Execute (Box<Command>),
-    Redirection (Box<Redirect>)
+    Execute (Box<Command>)
 }
 
 pub type WordPtr = Box<Word>;
@@ -32,6 +31,14 @@ pub type WordsPtr = Box<Words>;
 
 pub type Assignments = Vec<AssignmentPtr>;
 pub type AssignmentsPtr = Box<Assignments>;
+
+pub type Parameters = Vec<WordsPtr>;
+pub type ParametersPtr = Box<Parameters>;
+
+pub type RedirectPtr = Box<Redirect>;
+
+pub type Redirects = Vec<RedirectPtr>;
+pub type RedirectsPtr = Box<Redirects>;
 
 #[derive(Debug)]
 
@@ -52,28 +59,13 @@ pub enum OpCommand {
 pub enum Command {
     SimpleCommand {
         assignments: AssignmentsPtr,
-        parameters: WordsPtr,
-        redirects: WordsPtr
+        parameters: ParametersPtr,
+        redirects: Redirects
     },
     PipeCommand (Box<Command>, Box<Command>),
     SequentialCommand (Box<Command>, Box<Command>),
-    AndOrCommand (Box<Command>, Box<Command>, OpCommand),
+    AndCommand (Box<Command>, Box<Command>),
+    OrCommand (Box<Command>, Box<Command>)
 }
 
 pub type CommandPtr = Box<Command>;
-
-pub fn get_redirects (r:WordsPtr, w:WordsPtr) -> () {
-    for word in (*w).iter () {
-        // if let Word::Redirection (redirect) = word {
-        //     match **redirect {
-        //         Redirect::Output {words, append: _} => get_redirects (r, &*words),
-        //         Redirect::Error {words, append: _} => get_redirects (r, &*words),
-        //         Redirect::OutputAndError {words, append: _} => get_redirects (r, &*words),
-        //         Redirect::Input {words} => get_redirects (r, &*words)
-        //     };
-        //     println! ("{:#?}", redirect);
-        //     // r.push (r);
-        // }
-        println! ("{:#?}", word);
-    }
-}

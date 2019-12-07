@@ -3,7 +3,7 @@ use crate::sh::sh_ast::*;
 
 #[LALR]
 #[no_skip_whitespace]
-grammar;
+grammar<'redirects> (redirects: &'redirects mut Redirects);
 
 match {
     r#"(?:[^\s'"\\$\(\)\{\}><\&\|&=]|\\.)*"# => WORD,
@@ -44,44 +44,43 @@ PipeCommand: CommandPtr = {
 };
 
 AndOrCommand: CommandPtr = {
-    <s1:AndOrCommand> AND <s2:SimpleCommand>=> CommandPtr::new (Command::AndOrCommand(s1, s2, OpCommand::AND)),
-    <s1:AndOrCommand> AND WS <s2:SimpleCommand>=> CommandPtr::new (Command::AndOrCommand(s1, s2, OpCommand::AND)),
-    <s1:AndOrCommand> OR <s2:SimpleCommand>=> CommandPtr::new (Command::AndOrCommand(s1, s2, OpCommand::OR)),
-    <s1:AndOrCommand> OR WS <s2:SimpleCommand>=> CommandPtr::new (Command::AndOrCommand(s1, s2, OpCommand::OR)),
+    <s1:AndOrCommand> AND <s2:SimpleCommand>=> CommandPtr::new (Command::AndCommand(s1, s2)),
+    <s1:AndOrCommand> AND WS <s2:SimpleCommand>=> CommandPtr::new (Command::AndCommand(s1, s2)),
+    <s1:AndOrCommand> OR <s2:SimpleCommand>=> CommandPtr::new (Command::OrCommand(s1, s2)),
+    <s1:AndOrCommand> OR WS <s2:SimpleCommand>=> CommandPtr::new (Command::OrCommand(s1, s2)),
     <s:SimpleCommand> => s
 };
 
 SimpleCommand: CommandPtr = {
     <a:Assignments> WS <p:Params> => {
-        let redirects:WordsPtr = WordsPtr::new (Words::new ());
         // for parameter in p.iter() {
         //     get_redirects (redirects, parameter);
         // }
         let s = CommandPtr::new (Command::SimpleCommand {
             assignments: a,
             parameters: p,
-            redirects: redirects
+            redirects: redirects.drain(..).collect()
         });
         s
     },
     <mut p:Params> => {
-        let redirects:WordsPtr = WordsPtr::new (Words::new ());
         // for parameter in p.iter() {
         //     get_redirects (redirects, parameter);
         // }
         let s = CommandPtr::new (Command::SimpleCommand {
             assignments:AssignmentsPtr::new (Assignments::new ()),
             parameters: p,
-            redirects: redirects
+            redirects: redirects.drain(..).collect()
         });
+        // redirects.clear ();
         s
     }
 };
 
-Params: WordsPtr = {
-    => WordsPtr::new (Words::new ()),
+Params: ParametersPtr = {
+    => ParametersPtr::new (Parameters::new ()),
     <w:Words> => {
-        let mut p = WordsPtr::new (Words::new ());
+        let mut p = ParametersPtr::new(Parameters::new ());
         p.push (w);
         p
     },
@@ -133,50 +132,50 @@ Words: WordsPtr = {
         e
     },
     <r:Redirect> => {
-        let mut words = WordsPtr::new (Words::new ());
-        words.push (WordPtr::new (Word::Redirection (r)));
+        redirects.push (r);
+        let words = WordsPtr::new (Words::new ());
         words
     }
 }
 
-Redirect: Box<Redirect> = {
+Redirect: RedirectPtr = {
     OUTPUT_REDIRECT <w:Words> => {
-        let r = Box::new (Redirect::Output {
+        let r = RedirectPtr::new (Redirect::Output {
             words: w,
             append: false
         });
         r
     },
     ERROR_REDIRECT <w:Words> => {
-        let r = Box::new (Redirect::Error {
+        let r = RedirectPtr::new (Redirect::Error {
             words: w,
             append: false
         });
         r
     },
     OUTPUT_REDIRECT_APPEND <w:Words> => {
-        let r = Box::new (Redirect::Output {
+        let r = RedirectPtr::new (Redirect::Output {
             words: w,
             append: true
         });
         r
     },
     ERROR_REDIRECT_APPEND <w:Words> => {
-        let r = Box::new (Redirect::Error {
+        let r = RedirectPtr::new (Redirect::Error {
             words: w,
             append: true
         });
         r
     },
     OUTPUT_ERROR_REDIRECT_APPEND <w:Words> => {
-        let r = Box::new (Redirect::OutputAndError {
+        let r = RedirectPtr::new (Redirect::OutputAndError {
             words: w,
             append: true
         });
         r
     },
     OUTPUT_ERROR_REDIRECT <w:Words> => {
-        let r = Box::new (Redirect::OutputAndError {
+        let r = RedirectPtr::new (Redirect::OutputAndError {
             words: w,
             append: false
         });

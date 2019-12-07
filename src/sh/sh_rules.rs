@@ -1,5 +1,5 @@
 // auto-generated: "lalrpop 0.17.2"
-// sha256: 945ba1d7388e3f18c4618e5d5a4304f8c6e77d3d333e560568aba43f75bfd
+// sha256: 8d9c6fccc9af1d8cd6795587d0d3852cfffa45f3bb543bdba67817e3be99f
 use std::str::FromStr;
 use crate::sh::sh_ast::*;
 #[allow(unused_extern_crates)]
@@ -26,8 +26,9 @@ mod __parse__Command {
         Variant2(AssignmentPtr),
         Variant3(AssignmentsPtr),
         Variant4(WordPtr),
-        Variant5(WordsPtr),
-        Variant6(Box<Redirect>),
+        Variant5(ParametersPtr),
+        Variant6(RedirectPtr),
+        Variant7(WordsPtr),
     }
     const __ACTION: &'static [i8] = &[
         // State 0
@@ -422,13 +423,14 @@ mod __parse__Command {
             }
         }).collect()
     }
-    pub struct __StateMachine<'input>
+    pub struct __StateMachine<'input, 'redirects>
     where 
     {
+        redirects: &'redirects mut Redirects,
         input: &'input str,
-        __phantom: ::std::marker::PhantomData<(&'input ())>,
+        __phantom: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     }
-    impl<'input> __state_machine::ParserDefinition for __StateMachine<'input>
+    impl<'input, 'redirects> __state_machine::ParserDefinition for __StateMachine<'input, 'redirects>
     where 
     {
         type Location = usize;
@@ -454,7 +456,7 @@ mod __parse__Command {
 
         #[inline]
         fn token_to_index(&self, token: &Self::Token) -> Option<usize> {
-            __token_to_integer(token, ::std::marker::PhantomData::<(&())>)
+            __token_to_integer(token, ::std::marker::PhantomData::<(&(), &())>)
         }
 
         #[inline]
@@ -478,7 +480,7 @@ mod __parse__Command {
         }
 
         fn token_to_symbol(&self, token_index: usize, token: Self::Token) -> Self::Symbol {
-            __token_to_symbol(token_index, token, ::std::marker::PhantomData::<(&())>)
+            __token_to_symbol(token_index, token, ::std::marker::PhantomData::<(&(), &())>)
         }
 
         fn expected_tokens(&self, state: i8) -> Vec<String> {
@@ -506,24 +508,26 @@ mod __parse__Command {
             symbols: &mut Vec<__state_machine::SymbolTriple<Self>>,
         ) -> Option<__state_machine::ParseResult<Self>> {
             __reduce(
+                self.redirects,
                 self.input,
                 action,
                 start_location,
                 states,
                 symbols,
-                ::std::marker::PhantomData::<(&())>,
+                ::std::marker::PhantomData::<(&(), &())>,
             )
         }
 
         fn simulate_reduce(&self, action: i8) -> __state_machine::SimulatedReduce<Self> {
-            __simulate_reduce(action, ::std::marker::PhantomData::<(&())>)
+            __simulate_reduce(action, ::std::marker::PhantomData::<(&(), &())>)
         }
     }
     fn __token_to_integer<
         'input,
+        'redirects,
     >(
         __token: &Token<'input>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> Option<usize>
     {
         match *__token {
@@ -554,10 +558,11 @@ mod __parse__Command {
     }
     fn __token_to_symbol<
         'input,
+        'redirects,
     >(
         __token_index: usize,
         __token: Token<'input>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> __Symbol<'input>
     {
         match __token_index {
@@ -654,10 +659,11 @@ mod __parse__Command {
     }
     fn __simulate_reduce<
         'input,
+        'redirects,
     >(
         __reduce_index: i8,
-        _: ::std::marker::PhantomData<(&'input ())>,
-    ) -> __state_machine::SimulatedReduce<__StateMachine<'input>>
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
+    ) -> __state_machine::SimulatedReduce<__StateMachine<'input, 'redirects>>
     {
         match __reduce_index {
             0 => {
@@ -891,16 +897,19 @@ mod __parse__Command {
         #[allow(dead_code)]
         pub fn parse<
             'input,
+            'redirects,
         >(
             &self,
+            redirects: &'redirects mut Redirects,
             input: &'input str,
         ) -> Result<CommandPtr, __lalrpop_util::ParseError<usize, Token<'input>, &'static str>>
         {
             let mut __tokens = self.builder.matcher(input);
             let __r = __state_machine::Parser::drive(
                 __StateMachine {
+                    redirects,
                     input,
-                    __phantom: ::std::marker::PhantomData::<(&())>,
+                    __phantom: ::std::marker::PhantomData::<(&(), &())>,
                 },
                 __tokens,
             );
@@ -909,127 +918,129 @@ mod __parse__Command {
     }
     pub(crate) fn __reduce<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> Option<Result<CommandPtr,__lalrpop_util::ParseError<usize, Token<'input>, &'static str>>>
     {
         let (__pop_states, __nonterminal) = match __action {
             0 => {
-                __reduce0(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce0(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             1 => {
-                __reduce1(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce1(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             2 => {
-                __reduce2(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce2(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             3 => {
-                __reduce3(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce3(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             4 => {
-                __reduce4(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce4(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             5 => {
-                __reduce5(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce5(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             6 => {
-                __reduce6(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce6(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             7 => {
-                __reduce7(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce7(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             8 => {
-                __reduce8(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce8(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             9 => {
-                __reduce9(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce9(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             10 => {
-                __reduce10(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce10(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             11 => {
-                __reduce11(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce11(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             12 => {
-                __reduce12(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce12(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             13 => {
-                __reduce13(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce13(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             14 => {
-                __reduce14(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce14(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             15 => {
-                __reduce15(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce15(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             16 => {
-                __reduce16(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce16(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             17 => {
-                __reduce17(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce17(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             18 => {
-                __reduce18(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce18(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             19 => {
-                __reduce19(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce19(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             20 => {
-                __reduce20(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce20(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             21 => {
-                __reduce21(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce21(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             22 => {
-                __reduce22(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce22(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             23 => {
-                __reduce23(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce23(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             24 => {
-                __reduce24(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce24(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             25 => {
-                __reduce25(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce25(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             26 => {
-                __reduce26(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce26(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             27 => {
-                __reduce27(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce27(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             28 => {
-                __reduce28(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce28(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             29 => {
-                __reduce29(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce29(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             30 => {
-                __reduce30(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce30(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             31 => {
-                __reduce31(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce31(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             32 => {
-                __reduce32(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce32(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             33 => {
-                __reduce33(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce33(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             34 => {
-                __reduce34(input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&())>)
+                __reduce34(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             35 => {
                 // __Command = Command => ActionFn(0);
                 let __sym0 = __pop_Variant1(__symbols);
                 let __start = __sym0.0.clone();
                 let __end = __sym0.2.clone();
-                let __nt = super::__action0::<>(input, __sym0);
+                let __nt = super::__action0::<>(redirects, input, __sym0);
                 return Some(Ok(__nt));
             }
             _ => panic!("invalid action code {}", __action)
@@ -1063,17 +1074,6 @@ mod __parse__Command {
             _ => panic!("symbol type mismatch")
         }
     }
-    fn __pop_Variant6<
-      'input,
-    >(
-        __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>
-    ) -> (usize, Box<Redirect>, usize)
-     {
-        match __symbols.pop().unwrap() {
-            (__l, __Symbol::Variant6(__v), __r) => (__l, __v, __r),
-            _ => panic!("symbol type mismatch")
-        }
-    }
     fn __pop_Variant1<
       'input,
     >(
@@ -1082,6 +1082,28 @@ mod __parse__Command {
      {
         match __symbols.pop().unwrap() {
             (__l, __Symbol::Variant1(__v), __r) => (__l, __v, __r),
+            _ => panic!("symbol type mismatch")
+        }
+    }
+    fn __pop_Variant5<
+      'input,
+    >(
+        __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>
+    ) -> (usize, ParametersPtr, usize)
+     {
+        match __symbols.pop().unwrap() {
+            (__l, __Symbol::Variant5(__v), __r) => (__l, __v, __r),
+            _ => panic!("symbol type mismatch")
+        }
+    }
+    fn __pop_Variant6<
+      'input,
+    >(
+        __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>
+    ) -> (usize, RedirectPtr, usize)
+     {
+        match __symbols.pop().unwrap() {
+            (__l, __Symbol::Variant6(__v), __r) => (__l, __v, __r),
             _ => panic!("symbol type mismatch")
         }
     }
@@ -1096,14 +1118,14 @@ mod __parse__Command {
             _ => panic!("symbol type mismatch")
         }
     }
-    fn __pop_Variant5<
+    fn __pop_Variant7<
       'input,
     >(
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>
     ) -> (usize, WordsPtr, usize)
      {
         match __symbols.pop().unwrap() {
-            (__l, __Symbol::Variant5(__v), __r) => (__l, __v, __r),
+            (__l, __Symbol::Variant7(__v), __r) => (__l, __v, __r),
             _ => panic!("symbol type mismatch")
         }
     }
@@ -1120,13 +1142,15 @@ mod __parse__Command {
     }
     pub(crate) fn __reduce0<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // AndOrCommand = AndOrCommand, AND, SimpleCommand => ActionFn(7);
@@ -1135,19 +1159,21 @@ mod __parse__Command {
         let __sym0 = __pop_Variant1(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym2.2.clone();
-        let __nt = super::__action7::<>(input, __sym0, __sym1, __sym2);
+        let __nt = super::__action7::<>(redirects, input, __sym0, __sym1, __sym2);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (3, 0)
     }
     pub(crate) fn __reduce1<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // AndOrCommand = AndOrCommand, AND, WS, SimpleCommand => ActionFn(8);
@@ -1157,19 +1183,21 @@ mod __parse__Command {
         let __sym0 = __pop_Variant1(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym3.2.clone();
-        let __nt = super::__action8::<>(input, __sym0, __sym1, __sym2, __sym3);
+        let __nt = super::__action8::<>(redirects, input, __sym0, __sym1, __sym2, __sym3);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (4, 0)
     }
     pub(crate) fn __reduce2<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // AndOrCommand = AndOrCommand, OR, SimpleCommand => ActionFn(9);
@@ -1178,19 +1206,21 @@ mod __parse__Command {
         let __sym0 = __pop_Variant1(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym2.2.clone();
-        let __nt = super::__action9::<>(input, __sym0, __sym1, __sym2);
+        let __nt = super::__action9::<>(redirects, input, __sym0, __sym1, __sym2);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (3, 0)
     }
     pub(crate) fn __reduce3<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // AndOrCommand = AndOrCommand, OR, WS, SimpleCommand => ActionFn(10);
@@ -1200,59 +1230,65 @@ mod __parse__Command {
         let __sym0 = __pop_Variant1(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym3.2.clone();
-        let __nt = super::__action10::<>(input, __sym0, __sym1, __sym2, __sym3);
+        let __nt = super::__action10::<>(redirects, input, __sym0, __sym1, __sym2, __sym3);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (4, 0)
     }
     pub(crate) fn __reduce4<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // AndOrCommand = SimpleCommand => ActionFn(11);
         let __sym0 = __pop_Variant1(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
-        let __nt = super::__action11::<>(input, __sym0);
+        let __nt = super::__action11::<>(redirects, input, __sym0);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (1, 0)
     }
     pub(crate) fn __reduce5<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Assignment = WORD, EQUAL, Words => ActionFn(19);
-        let __sym2 = __pop_Variant5(__symbols);
+        let __sym2 = __pop_Variant7(__symbols);
         let __sym1 = __pop_Variant0(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym2.2.clone();
-        let __nt = super::__action19::<>(input, __sym0, __sym1, __sym2);
+        let __nt = super::__action19::<>(redirects, input, __sym0, __sym1, __sym2);
         __symbols.push((__start, __Symbol::Variant2(__nt), __end));
         (3, 1)
     }
     pub(crate) fn __reduce6<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Assignment = WORD, EQUAL => ActionFn(20);
@@ -1260,19 +1296,21 @@ mod __parse__Command {
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym1.2.clone();
-        let __nt = super::__action20::<>(input, __sym0, __sym1);
+        let __nt = super::__action20::<>(redirects, input, __sym0, __sym1);
         __symbols.push((__start, __Symbol::Variant2(__nt), __end));
         (2, 1)
     }
     pub(crate) fn __reduce7<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Assignments = Assignments, WS, Assignment => ActionFn(17);
@@ -1281,38 +1319,42 @@ mod __parse__Command {
         let __sym0 = __pop_Variant3(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym2.2.clone();
-        let __nt = super::__action17::<>(input, __sym0, __sym1, __sym2);
+        let __nt = super::__action17::<>(redirects, input, __sym0, __sym1, __sym2);
         __symbols.push((__start, __Symbol::Variant3(__nt), __end));
         (3, 2)
     }
     pub(crate) fn __reduce8<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Assignments = Assignment => ActionFn(18);
         let __sym0 = __pop_Variant2(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
-        let __nt = super::__action18::<>(input, __sym0);
+        let __nt = super::__action18::<>(redirects, input, __sym0);
         __symbols.push((__start, __Symbol::Variant3(__nt), __end));
         (1, 2)
     }
     pub(crate) fn __reduce9<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Command = Command, SEQUENCE, PipeCommand => ActionFn(1);
@@ -1321,19 +1363,21 @@ mod __parse__Command {
         let __sym0 = __pop_Variant1(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym2.2.clone();
-        let __nt = super::__action1::<>(input, __sym0, __sym1, __sym2);
+        let __nt = super::__action1::<>(redirects, input, __sym0, __sym1, __sym2);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (3, 3)
     }
     pub(crate) fn __reduce10<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Command = Command, SEQUENCE, WS, PipeCommand => ActionFn(2);
@@ -1343,38 +1387,42 @@ mod __parse__Command {
         let __sym0 = __pop_Variant1(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym3.2.clone();
-        let __nt = super::__action2::<>(input, __sym0, __sym1, __sym2, __sym3);
+        let __nt = super::__action2::<>(redirects, input, __sym0, __sym1, __sym2, __sym3);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (4, 3)
     }
     pub(crate) fn __reduce11<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Command = PipeCommand => ActionFn(3);
         let __sym0 = __pop_Variant1(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
-        let __nt = super::__action3::<>(input, __sym0);
+        let __nt = super::__action3::<>(redirects, input, __sym0);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (1, 3)
     }
     pub(crate) fn __reduce12<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Expand = EXPAND, WORD => ActionFn(33);
@@ -1382,19 +1430,21 @@ mod __parse__Command {
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym1.2.clone();
-        let __nt = super::__action33::<>(input, __sym0, __sym1);
+        let __nt = super::__action33::<>(redirects, input, __sym0, __sym1);
         __symbols.push((__start, __Symbol::Variant4(__nt), __end));
         (2, 4)
     }
     pub(crate) fn __reduce13<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Expand = EXPAND, LB, WORD, RB => ActionFn(34);
@@ -1404,19 +1454,21 @@ mod __parse__Command {
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym3.2.clone();
-        let __nt = super::__action34::<>(input, __sym0, __sym1, __sym2, __sym3);
+        let __nt = super::__action34::<>(redirects, input, __sym0, __sym1, __sym2, __sym3);
         __symbols.push((__start, __Symbol::Variant4(__nt), __end));
         (4, 4)
     }
     pub(crate) fn __reduce14<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Expand = EXPAND, LP, Command, RP => ActionFn(35);
@@ -1426,77 +1478,85 @@ mod __parse__Command {
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym3.2.clone();
-        let __nt = super::__action35::<>(input, __sym0, __sym1, __sym2, __sym3);
+        let __nt = super::__action35::<>(redirects, input, __sym0, __sym1, __sym2, __sym3);
         __symbols.push((__start, __Symbol::Variant4(__nt), __end));
         (4, 4)
     }
     pub(crate) fn __reduce15<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Params =  => ActionFn(14);
         let __start = __symbols.last().map(|s| s.2.clone()).unwrap_or_default();
         let __end = __lookahead_start.cloned().unwrap_or_else(|| __start.clone());
-        let __nt = super::__action14::<>(input, &__start, &__end);
+        let __nt = super::__action14::<>(redirects, input, &__start, &__end);
         __symbols.push((__start, __Symbol::Variant5(__nt), __end));
         (0, 5)
     }
     pub(crate) fn __reduce16<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Params = Words => ActionFn(15);
-        let __sym0 = __pop_Variant5(__symbols);
+        let __sym0 = __pop_Variant7(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
-        let __nt = super::__action15::<>(input, __sym0);
+        let __nt = super::__action15::<>(redirects, input, __sym0);
         __symbols.push((__start, __Symbol::Variant5(__nt), __end));
         (1, 5)
     }
     pub(crate) fn __reduce17<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Params = Words, WS, Params => ActionFn(16);
         let __sym2 = __pop_Variant5(__symbols);
         let __sym1 = __pop_Variant0(__symbols);
-        let __sym0 = __pop_Variant5(__symbols);
+        let __sym0 = __pop_Variant7(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym2.2.clone();
-        let __nt = super::__action16::<>(input, __sym0, __sym1, __sym2);
+        let __nt = super::__action16::<>(redirects, input, __sym0, __sym1, __sym2);
         __symbols.push((__start, __Symbol::Variant5(__nt), __end));
         (3, 5)
     }
     pub(crate) fn __reduce18<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // PipeCommand = PipeCommand, PIPE, AndOrCommand => ActionFn(4);
@@ -1505,19 +1565,21 @@ mod __parse__Command {
         let __sym0 = __pop_Variant1(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym2.2.clone();
-        let __nt = super::__action4::<>(input, __sym0, __sym1, __sym2);
+        let __nt = super::__action4::<>(redirects, input, __sym0, __sym1, __sym2);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (3, 6)
     }
     pub(crate) fn __reduce19<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // PipeCommand = PipeCommand, PIPE, WS, AndOrCommand => ActionFn(5);
@@ -1527,158 +1589,174 @@ mod __parse__Command {
         let __sym0 = __pop_Variant1(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym3.2.clone();
-        let __nt = super::__action5::<>(input, __sym0, __sym1, __sym2, __sym3);
+        let __nt = super::__action5::<>(redirects, input, __sym0, __sym1, __sym2, __sym3);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (4, 6)
     }
     pub(crate) fn __reduce20<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // PipeCommand = AndOrCommand => ActionFn(6);
         let __sym0 = __pop_Variant1(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
-        let __nt = super::__action6::<>(input, __sym0);
+        let __nt = super::__action6::<>(redirects, input, __sym0);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (1, 6)
     }
     pub(crate) fn __reduce21<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Redirect = OUTPUT_REDIRECT, Words => ActionFn(24);
-        let __sym1 = __pop_Variant5(__symbols);
+        let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym1.2.clone();
-        let __nt = super::__action24::<>(input, __sym0, __sym1);
+        let __nt = super::__action24::<>(redirects, input, __sym0, __sym1);
         __symbols.push((__start, __Symbol::Variant6(__nt), __end));
         (2, 7)
     }
     pub(crate) fn __reduce22<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Redirect = ERROR_REDIRECT, Words => ActionFn(25);
-        let __sym1 = __pop_Variant5(__symbols);
+        let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym1.2.clone();
-        let __nt = super::__action25::<>(input, __sym0, __sym1);
+        let __nt = super::__action25::<>(redirects, input, __sym0, __sym1);
         __symbols.push((__start, __Symbol::Variant6(__nt), __end));
         (2, 7)
     }
     pub(crate) fn __reduce23<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Redirect = OUTPUT_REDIRECT_APPEND, Words => ActionFn(26);
-        let __sym1 = __pop_Variant5(__symbols);
+        let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym1.2.clone();
-        let __nt = super::__action26::<>(input, __sym0, __sym1);
+        let __nt = super::__action26::<>(redirects, input, __sym0, __sym1);
         __symbols.push((__start, __Symbol::Variant6(__nt), __end));
         (2, 7)
     }
     pub(crate) fn __reduce24<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Redirect = ERROR_REDIRECT_APPEND, Words => ActionFn(27);
-        let __sym1 = __pop_Variant5(__symbols);
+        let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym1.2.clone();
-        let __nt = super::__action27::<>(input, __sym0, __sym1);
+        let __nt = super::__action27::<>(redirects, input, __sym0, __sym1);
         __symbols.push((__start, __Symbol::Variant6(__nt), __end));
         (2, 7)
     }
     pub(crate) fn __reduce25<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Redirect = OUTPUT_ERROR_REDIRECT_APPEND, Words => ActionFn(28);
-        let __sym1 = __pop_Variant5(__symbols);
+        let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym1.2.clone();
-        let __nt = super::__action28::<>(input, __sym0, __sym1);
+        let __nt = super::__action28::<>(redirects, input, __sym0, __sym1);
         __symbols.push((__start, __Symbol::Variant6(__nt), __end));
         (2, 7)
     }
     pub(crate) fn __reduce26<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Redirect = OUTPUT_ERROR_REDIRECT, Words => ActionFn(29);
-        let __sym1 = __pop_Variant5(__symbols);
+        let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym1.2.clone();
-        let __nt = super::__action29::<>(input, __sym0, __sym1);
+        let __nt = super::__action29::<>(redirects, input, __sym0, __sym1);
         __symbols.push((__start, __Symbol::Variant6(__nt), __end));
         (2, 7)
     }
     pub(crate) fn __reduce27<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // SimpleCommand = Assignments, WS, Params => ActionFn(12);
@@ -1687,142 +1765,156 @@ mod __parse__Command {
         let __sym0 = __pop_Variant3(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym2.2.clone();
-        let __nt = super::__action12::<>(input, __sym0, __sym1, __sym2);
+        let __nt = super::__action12::<>(redirects, input, __sym0, __sym1, __sym2);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (3, 8)
     }
     pub(crate) fn __reduce28<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // SimpleCommand = Params => ActionFn(13);
         let __sym0 = __pop_Variant5(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
-        let __nt = super::__action13::<>(input, __sym0);
+        let __nt = super::__action13::<>(redirects, input, __sym0);
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (1, 8)
     }
     pub(crate) fn __reduce29<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Word = WORD => ActionFn(30);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
-        let __nt = super::__action30::<>(input, __sym0);
+        let __nt = super::__action30::<>(redirects, input, __sym0);
         __symbols.push((__start, __Symbol::Variant4(__nt), __end));
         (1, 9)
     }
     pub(crate) fn __reduce30<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Word = SINGLE_QUOTES_WORD => ActionFn(31);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
-        let __nt = super::__action31::<>(input, __sym0);
+        let __nt = super::__action31::<>(redirects, input, __sym0);
         __symbols.push((__start, __Symbol::Variant4(__nt), __end));
         (1, 9)
     }
     pub(crate) fn __reduce31<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Word = Expand => ActionFn(32);
         let __sym0 = __pop_Variant4(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
-        let __nt = super::__action32::<>(input, __sym0);
+        let __nt = super::__action32::<>(redirects, input, __sym0);
         __symbols.push((__start, __Symbol::Variant4(__nt), __end));
         (1, 9)
     }
     pub(crate) fn __reduce32<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Words = Word => ActionFn(21);
         let __sym0 = __pop_Variant4(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
-        let __nt = super::__action21::<>(input, __sym0);
-        __symbols.push((__start, __Symbol::Variant5(__nt), __end));
+        let __nt = super::__action21::<>(redirects, input, __sym0);
+        __symbols.push((__start, __Symbol::Variant7(__nt), __end));
         (1, 10)
     }
     pub(crate) fn __reduce33<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Words = Word, Words => ActionFn(22);
-        let __sym1 = __pop_Variant5(__symbols);
+        let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant4(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym1.2.clone();
-        let __nt = super::__action22::<>(input, __sym0, __sym1);
-        __symbols.push((__start, __Symbol::Variant5(__nt), __end));
+        let __nt = super::__action22::<>(redirects, input, __sym0, __sym1);
+        __symbols.push((__start, __Symbol::Variant7(__nt), __end));
         (2, 10)
     }
     pub(crate) fn __reduce34<
         'input,
+        'redirects,
     >(
+        redirects: &'redirects mut Redirects,
         input: &'input str,
         __action: i8,
         __lookahead_start: Option<&usize>,
         __states: &mut ::std::vec::Vec<i8>,
         __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input ())>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
         // Words = Redirect => ActionFn(23);
         let __sym0 = __pop_Variant6(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
-        let __nt = super::__action23::<>(input, __sym0);
-        __symbols.push((__start, __Symbol::Variant5(__nt), __end));
+        let __nt = super::__action23::<>(redirects, input, __sym0);
+        __symbols.push((__start, __Symbol::Variant7(__nt), __end));
         (1, 10)
     }
 }
@@ -1967,7 +2059,9 @@ pub use self::__intern_token::Token;
 #[allow(unused_variables)]
 fn __action0<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, __0, _): (usize, CommandPtr, usize),
 ) -> CommandPtr
@@ -1978,7 +2072,9 @@ fn __action0<
 #[allow(unused_variables)]
 fn __action1<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, s1, _): (usize, CommandPtr, usize),
     (_, _, _): (usize, &'input str, usize),
@@ -1991,7 +2087,9 @@ fn __action1<
 #[allow(unused_variables)]
 fn __action2<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, s1, _): (usize, CommandPtr, usize),
     (_, _, _): (usize, &'input str, usize),
@@ -2005,7 +2103,9 @@ fn __action2<
 #[allow(unused_variables)]
 fn __action3<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, s, _): (usize, CommandPtr, usize),
 ) -> CommandPtr
@@ -2016,7 +2116,9 @@ fn __action3<
 #[allow(unused_variables)]
 fn __action4<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, s1, _): (usize, CommandPtr, usize),
     (_, _, _): (usize, &'input str, usize),
@@ -2029,7 +2131,9 @@ fn __action4<
 #[allow(unused_variables)]
 fn __action5<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, s1, _): (usize, CommandPtr, usize),
     (_, _, _): (usize, &'input str, usize),
@@ -2043,7 +2147,9 @@ fn __action5<
 #[allow(unused_variables)]
 fn __action6<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, s, _): (usize, CommandPtr, usize),
 ) -> CommandPtr
@@ -2054,20 +2160,24 @@ fn __action6<
 #[allow(unused_variables)]
 fn __action7<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, s1, _): (usize, CommandPtr, usize),
     (_, _, _): (usize, &'input str, usize),
     (_, s2, _): (usize, CommandPtr, usize),
 ) -> CommandPtr
 {
-    CommandPtr::new (Command::AndOrCommand(s1, s2, OpCommand::AND))
+    CommandPtr::new (Command::AndCommand(s1, s2))
 }
 
 #[allow(unused_variables)]
 fn __action8<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, s1, _): (usize, CommandPtr, usize),
     (_, _, _): (usize, &'input str, usize),
@@ -2075,26 +2185,30 @@ fn __action8<
     (_, s2, _): (usize, CommandPtr, usize),
 ) -> CommandPtr
 {
-    CommandPtr::new (Command::AndOrCommand(s1, s2, OpCommand::AND))
+    CommandPtr::new (Command::AndCommand(s1, s2))
 }
 
 #[allow(unused_variables)]
 fn __action9<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, s1, _): (usize, CommandPtr, usize),
     (_, _, _): (usize, &'input str, usize),
     (_, s2, _): (usize, CommandPtr, usize),
 ) -> CommandPtr
 {
-    CommandPtr::new (Command::AndOrCommand(s1, s2, OpCommand::OR))
+    CommandPtr::new (Command::OrCommand(s1, s2))
 }
 
 #[allow(unused_variables)]
 fn __action10<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, s1, _): (usize, CommandPtr, usize),
     (_, _, _): (usize, &'input str, usize),
@@ -2102,13 +2216,15 @@ fn __action10<
     (_, s2, _): (usize, CommandPtr, usize),
 ) -> CommandPtr
 {
-    CommandPtr::new (Command::AndOrCommand(s1, s2, OpCommand::OR))
+    CommandPtr::new (Command::OrCommand(s1, s2))
 }
 
 #[allow(unused_variables)]
 fn __action11<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, s, _): (usize, CommandPtr, usize),
 ) -> CommandPtr
@@ -2119,22 +2235,23 @@ fn __action11<
 #[allow(unused_variables)]
 fn __action12<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, a, _): (usize, AssignmentsPtr, usize),
     (_, _, _): (usize, &'input str, usize),
-    (_, p, _): (usize, WordsPtr, usize),
+    (_, p, _): (usize, ParametersPtr, usize),
 ) -> CommandPtr
 {
     {
-        let redirects:WordsPtr = WordsPtr::new (Words::new ());
         // for parameter in p.iter() {
         //     get_redirects (redirects, parameter);
         // }
         let s = CommandPtr::new (Command::SimpleCommand {
             assignments: a,
             parameters: p,
-            redirects: redirects
+            redirects: redirects.drain(..).collect()
         });
         s
     }
@@ -2143,21 +2260,23 @@ fn __action12<
 #[allow(unused_variables)]
 fn __action13<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
-    (_, mut p, _): (usize, WordsPtr, usize),
+    (_, mut p, _): (usize, ParametersPtr, usize),
 ) -> CommandPtr
 {
     {
-        let redirects:WordsPtr = WordsPtr::new (Words::new ());
         // for parameter in p.iter() {
         //     get_redirects (redirects, parameter);
         // }
         let s = CommandPtr::new (Command::SimpleCommand {
             assignments:AssignmentsPtr::new (Assignments::new ()),
             parameters: p,
-            redirects: redirects
+            redirects: redirects.drain(..).collect()
         });
+        // redirects.clear ();
         s
     }
 }
@@ -2165,26 +2284,30 @@ fn __action13<
 #[allow(unused_variables)]
 fn __action14<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     __lookbehind: &usize,
     __lookahead: &usize,
-) -> WordsPtr
+) -> ParametersPtr
 {
-    WordsPtr::new (Words::new ())
+    ParametersPtr::new (Parameters::new ())
 }
 
 #[allow(unused_variables)]
 fn __action15<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, w, _): (usize, WordsPtr, usize),
-) -> WordsPtr
+) -> ParametersPtr
 {
     {
-        let mut p = WordsPtr::new (Words::new ());
-        (*p).push (w);
+        let mut p = ParametersPtr::new(Parameters::new ());
+        p.push (w);
         p
     }
 }
@@ -2192,15 +2315,17 @@ fn __action15<
 #[allow(unused_variables)]
 fn __action16<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, w, _): (usize, WordsPtr, usize),
     (_, _, _): (usize, &'input str, usize),
-    (_, mut p, _): (usize, WordsPtr, usize),
-) -> WordsPtr
+    (_, mut p, _): (usize, ParametersPtr, usize),
+) -> ParametersPtr
 {
     {
-        (*p).insert (0, w);
+        p.insert (0, w);
         p
     }
 }
@@ -2208,7 +2333,9 @@ fn __action16<
 #[allow(unused_variables)]
 fn __action17<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, mut n, _): (usize, AssignmentsPtr, usize),
     (_, _, _): (usize, &'input str, usize),
@@ -2224,7 +2351,9 @@ fn __action17<
 #[allow(unused_variables)]
 fn __action18<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, a, _): (usize, AssignmentPtr, usize),
 ) -> AssignmentsPtr
@@ -2239,7 +2368,9 @@ fn __action18<
 #[allow(unused_variables)]
 fn __action19<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, w1, _): (usize, &'input str, usize),
     (_, _, _): (usize, &'input str, usize),
@@ -2258,7 +2389,9 @@ fn __action19<
 #[allow(unused_variables)]
 fn __action20<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, w, _): (usize, &'input str, usize),
     (_, _, _): (usize, &'input str, usize),
@@ -2276,14 +2409,16 @@ fn __action20<
 #[allow(unused_variables)]
 fn __action21<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, w, _): (usize, WordPtr, usize),
 ) -> WordsPtr
 {
     {
         let mut words = WordsPtr::new (Words::new ());
-        (*words).push (w);
+        words.push (w);
         words
     }
 }
@@ -2291,7 +2426,9 @@ fn __action21<
 #[allow(unused_variables)]
 fn __action22<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, w, _): (usize, WordPtr, usize),
     (_, mut e, _): (usize, WordsPtr, usize),
@@ -2306,14 +2443,16 @@ fn __action22<
 #[allow(unused_variables)]
 fn __action23<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
-    (_, r, _): (usize, Box<Redirect>, usize),
+    (_, r, _): (usize, RedirectPtr, usize),
 ) -> WordsPtr
 {
     {
-        let mut words = WordsPtr::new (Words::new ());
-        (*words).push (WordPtr::new (Word::Redirection (r)));
+        redirects.push (r);
+        let words = WordsPtr::new (Words::new ());
         words
     }
 }
@@ -2321,14 +2460,16 @@ fn __action23<
 #[allow(unused_variables)]
 fn __action24<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, _, _): (usize, &'input str, usize),
     (_, w, _): (usize, WordsPtr, usize),
-) -> Box<Redirect>
+) -> RedirectPtr
 {
     {
-        let r = Box::new (Redirect::Output {
+        let r = RedirectPtr::new (Redirect::Output {
             words: w,
             append: false
         });
@@ -2339,14 +2480,16 @@ fn __action24<
 #[allow(unused_variables)]
 fn __action25<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, _, _): (usize, &'input str, usize),
     (_, w, _): (usize, WordsPtr, usize),
-) -> Box<Redirect>
+) -> RedirectPtr
 {
     {
-        let r = Box::new (Redirect::Error {
+        let r = RedirectPtr::new (Redirect::Error {
             words: w,
             append: false
         });
@@ -2357,14 +2500,16 @@ fn __action25<
 #[allow(unused_variables)]
 fn __action26<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, _, _): (usize, &'input str, usize),
     (_, w, _): (usize, WordsPtr, usize),
-) -> Box<Redirect>
+) -> RedirectPtr
 {
     {
-        let r = Box::new (Redirect::Output {
+        let r = RedirectPtr::new (Redirect::Output {
             words: w,
             append: true
         });
@@ -2375,14 +2520,16 @@ fn __action26<
 #[allow(unused_variables)]
 fn __action27<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, _, _): (usize, &'input str, usize),
     (_, w, _): (usize, WordsPtr, usize),
-) -> Box<Redirect>
+) -> RedirectPtr
 {
     {
-        let r = Box::new (Redirect::Error {
+        let r = RedirectPtr::new (Redirect::Error {
             words: w,
             append: true
         });
@@ -2393,14 +2540,16 @@ fn __action27<
 #[allow(unused_variables)]
 fn __action28<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, _, _): (usize, &'input str, usize),
     (_, w, _): (usize, WordsPtr, usize),
-) -> Box<Redirect>
+) -> RedirectPtr
 {
     {
-        let r = Box::new (Redirect::OutputAndError {
+        let r = RedirectPtr::new (Redirect::OutputAndError {
             words: w,
             append: true
         });
@@ -2411,14 +2560,16 @@ fn __action28<
 #[allow(unused_variables)]
 fn __action29<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, _, _): (usize, &'input str, usize),
     (_, w, _): (usize, WordsPtr, usize),
-) -> Box<Redirect>
+) -> RedirectPtr
 {
     {
-        let r = Box::new (Redirect::OutputAndError {
+        let r = RedirectPtr::new (Redirect::OutputAndError {
             words: w,
             append: false
         });
@@ -2429,7 +2580,9 @@ fn __action29<
 #[allow(unused_variables)]
 fn __action30<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, w, _): (usize, &'input str, usize),
 ) -> WordPtr
@@ -2442,7 +2595,9 @@ fn __action30<
 #[allow(unused_variables)]
 fn __action31<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, sq, _): (usize, &'input str, usize),
 ) -> WordPtr
@@ -2455,7 +2610,9 @@ fn __action31<
 #[allow(unused_variables)]
 fn __action32<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, e, _): (usize, WordPtr, usize),
 ) -> WordPtr
@@ -2466,7 +2623,9 @@ fn __action32<
 #[allow(unused_variables)]
 fn __action33<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, _, _): (usize, &'input str, usize),
     (_, w, _): (usize, &'input str, usize),
@@ -2480,7 +2639,9 @@ fn __action33<
 #[allow(unused_variables)]
 fn __action34<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, _, _): (usize, &'input str, usize),
     (_, _, _): (usize, &'input str, usize),
@@ -2496,7 +2657,9 @@ fn __action34<
 #[allow(unused_variables)]
 fn __action35<
     'input,
+    'redirects,
 >(
+    redirects: &'redirects mut Redirects,
     input: &'input str,
     (_, _, _): (usize, &'input str, usize),
     (_, _, _): (usize, &'input str, usize),
@@ -2509,16 +2672,16 @@ fn __action35<
     }
 }
 
-pub trait __ToTriple<'input, > {
+pub trait __ToTriple<'input, 'redirects, > {
     fn to_triple(value: Self) -> Result<(usize,Token<'input>,usize), __lalrpop_util::ParseError<usize, Token<'input>, &'static str>>;
 }
 
-impl<'input, > __ToTriple<'input, > for (usize, Token<'input>, usize) {
+impl<'input, 'redirects, > __ToTriple<'input, 'redirects, > for (usize, Token<'input>, usize) {
     fn to_triple(value: Self) -> Result<(usize,Token<'input>,usize), __lalrpop_util::ParseError<usize, Token<'input>, &'static str>> {
         Ok(value)
     }
 }
-impl<'input, > __ToTriple<'input, > for Result<(usize, Token<'input>, usize), &'static str> {
+impl<'input, 'redirects, > __ToTriple<'input, 'redirects, > for Result<(usize, Token<'input>, usize), &'static str> {
     fn to_triple(value: Self) -> Result<(usize,Token<'input>,usize), __lalrpop_util::ParseError<usize, Token<'input>, &'static str>> {
         match value {
             Ok(v) => Ok(v),
