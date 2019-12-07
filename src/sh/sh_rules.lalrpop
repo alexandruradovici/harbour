@@ -196,7 +196,6 @@ Word: WordPtr = {
         WordPtr::new (Word::Word(sq[1..sq.len()-1].to_string()))
     },
     <sq: DOUBLE_QUOTES_WORD> => {
-        println! ("Doubvle quotes");
         WordPtr::new (Word::Quotes(sq[1..sq.len()-1].to_string()))
     },
     <e:Expand> => e

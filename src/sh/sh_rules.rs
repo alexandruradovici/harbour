@@ -1,5 +1,5 @@
 // auto-generated: "lalrpop 0.17.2"
-// sha256: 32a417c21f3b8bfaa068267559c36f8914e9ec355d6a58409c2118e3ff277878
+// sha256: 73f3b34df0ed58ce2836780262d96c95853222923a47a192ed718c398554f
 use crate::sh::sh_ast::*;
 #[allow(unused_extern_crates)]
 extern crate lalrpop_util as __lalrpop_util;
@@ -2713,7 +2713,6 @@ fn __action33<
 ) -> WordPtr
 {
     {
-        println! ("Doubvle quotes");
         WordPtr::new (Word::Quotes(sq[1..sq.len()-1].to_string()))
     }
 }
