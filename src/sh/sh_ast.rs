@@ -20,6 +20,7 @@ pub enum Redirect {
 #[derive(Debug)]
 pub enum Word {
     Word (String),
+    Quotes (String),
     Expand (String),
     Execute (Box<Command>)
 }
@@ -50,17 +51,11 @@ pub struct Assignment {
 pub type AssignmentPtr = Box<Assignment>;
 
 #[derive(Debug)]
-pub enum OpCommand {
-    AND,
-    OR
-}
-
-#[derive(Debug)]
 pub enum Command {
     SimpleCommand {
         assignments: AssignmentsPtr,
         parameters: ParametersPtr,
-        redirects: Redirects
+        redirects: RedirectsPtr
     },
     PipeCommand (Box<Command>, Box<Command>),
     SequentialCommand (Box<Command>, Box<Command>),

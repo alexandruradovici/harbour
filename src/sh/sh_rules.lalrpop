@@ -1,4 +1,3 @@
-use std::str::FromStr;
 use crate::sh::sh_ast::*;
 
 #[LALR]
@@ -6,8 +5,9 @@ use crate::sh::sh_ast::*;
 grammar<'redirects> (redirects: &'redirects mut Redirects);
 
 match {
-    r#"(?:[^\s'"\\$\(\)\{\}><\&\|&=]|\\.)*"# => WORD,
+    r#"(?:[^\s'"\\$\(\)\{\}><\&\|&=]|\\.)+"# => WORD,
     r"'(?:[^'\\]|\\.)*'" => SINGLE_QUOTES_WORD,
+    r#""(?:[^"\\]|\\.)*""# => DOUBLE_QUOTES_WORD,
     "=" => EQUAL,
     "$" => EXPAND,
     "(" => LP,
@@ -27,7 +27,6 @@ match {
     "&>>" => OUTPUT_ERROR_REDIRECT_APPEND,
     ";" => SEQUENCE
 } else {
-    r"[[:digit:]]+" => NUMBER,
     r"\s+" => WS
 }
 
@@ -59,18 +58,18 @@ SimpleCommand: CommandPtr = {
         let s = CommandPtr::new (Command::SimpleCommand {
             assignments: a,
             parameters: p,
-            redirects: redirects.drain(..).collect()
+            redirects: RedirectsPtr::new (redirects.drain(..).collect())
         });
         s
     },
-    <mut p:Params> => {
+    <p:Params> => {
         // for parameter in p.iter() {
         //     get_redirects (redirects, parameter);
         // }
         let s = CommandPtr::new (Command::SimpleCommand {
             assignments:AssignmentsPtr::new (Assignments::new ()),
             parameters: p,
-            redirects: redirects.drain(..).collect()
+            redirects: RedirectsPtr::new (redirects.drain(..).collect())
         });
         // redirects.clear ();
         s
@@ -139,6 +138,12 @@ Words: WordsPtr = {
 }
 
 Redirect: RedirectPtr = {
+    INPUT_REDIRECT <w:Words> => {
+        let r = RedirectPtr::new (Redirect::Input {
+            words: w
+        });
+        r
+    },
     OUTPUT_REDIRECT <w:Words> => {
         let r = RedirectPtr::new (Redirect::Output {
             words: w,
@@ -189,6 +194,10 @@ Word: WordPtr = {
     },
     <sq: SINGLE_QUOTES_WORD> => {
         WordPtr::new (Word::Word(sq[1..sq.len()-1].to_string()))
+    },
+    <sq: DOUBLE_QUOTES_WORD> => {
+        println! ("Doubvle quotes");
+        WordPtr::new (Word::Quotes(sq[1..sq.len()-1].to_string()))
     },
     <e:Expand> => e
 };

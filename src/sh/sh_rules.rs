@@ -1,6 +1,5 @@
 // auto-generated: "lalrpop 0.17.2"
-// sha256: 8d9c6fccc9af1d8cd6795587d0d3852cfffa45f3bb543bdba67817e3be99f
-use std::str::FromStr;
+// sha256: 32a417c21f3b8bfaa068267559c36f8914e9ec355d6a58409c2118e3ff277878
 use crate::sh::sh_ast::*;
 #[allow(unused_extern_crates)]
 extern crate lalrpop_util as __lalrpop_util;
@@ -11,7 +10,6 @@ use self::__lalrpop_util::state_machine as __state_machine;
 mod __parse__Command {
     #![allow(non_snake_case, non_camel_case_types, unused_mut, unused_variables, unused_imports, unused_parens)]
 
-    use std::str::FromStr;
     use crate::sh::sh_ast::*;
     #[allow(unused_extern_crates)]
     extern crate lalrpop_util as __lalrpop_util;
@@ -32,123 +30,129 @@ mod __parse__Command {
     }
     const __ACTION: &'static [i8] = &[
         // State 0
-        -16, 0, 0, 13, 14, 15, 0, 0, 0, 0, -16, 16, 17, 18, 19, -16, 0, 0, -16, 20, 21, 0,
+        -16, 0, 13, 0, 14, 15, 16, 17, 0, 0, -16, 18, 19, 20, 21, -16, 0, 0, -16, 22, 23, 0,
         // State 1
-        22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 0, -21, 0, -21, -21, 0, 0, 0,
+        24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, -21, 0, -21, -21, 0, 0, 0,
         // State 2
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -9,
         // State 3
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26,
         // State 4
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0,
         // State 5
-        -32, 0, 0, -32, -32, -32, 0, 0, 0, 0, -32, -32, -32, -32, -32, -32, 0, -32, -32, -32, -32, -32,
+        -34, 0, -34, 0, -34, -34, -34, -34, 0, 0, -34, -34, -34, -34, -34, -34, 0, -34, -34, -34, -34, -34,
         // State 6
-        -29, 0, 0, 0, 0, 0, 0, 0, 0, 0, -29, 0, 0, 0, 0, -29, 0, -29, -29, 0, 0, 0,
+        -30, 0, 0, 0, 0, 0, 0, 0, 0, 0, -30, 0, 0, 0, 0, -30, 0, -30, -30, 0, 0, 0,
         // State 7
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, -12, -12, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, -12, -12, 0, 0, 0,
         // State 8
-        -35, 0, 0, 0, 0, 0, 0, 0, 0, 0, -35, 0, 0, 0, 0, -35, 0, -35, -35, 0, 0, -35,
+        -37, 0, 0, 0, 0, 0, 0, 0, 0, 0, -37, 0, 0, 0, 0, -37, 0, -37, -37, 0, 0, -37,
         // State 9
         -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, -5, 0, 0, 0, 0, -5, 0, -5, -5, 0, 0, 0,
         // State 10
-        -33, 0, 0, 13, 14, 15, 0, 0, 0, 0, -33, 16, 17, 18, 19, -33, 0, -33, -33, 20, 28, -33,
+        -35, 0, 13, 0, 14, 15, 16, 17, 0, 0, -35, 18, 19, 20, 21, -35, 0, -35, -35, 22, 30, -35,
         // State 11
-        -17, 0, 0, 0, 0, 0, 0, 0, 0, 0, -17, 0, 0, 0, 0, -17, 0, -17, -17, 0, 0, 29,
+        -17, 0, 0, 0, 0, 0, 0, 0, 0, 0, -17, 0, 0, 0, 0, -17, 0, -17, -17, 0, 0, 31,
         // State 12
-        0, 0, 0, 13, 14, 15, 0, 0, 0, 0, 0, 16, 17, 18, 19, 0, 0, 0, 0, 20, 28, 0,
+        -33, 0, -33, 0, -33, -33, -33, -33, 0, 0, -33, -33, -33, -33, -33, -33, 0, -33, -33, -33, -33, -33,
         // State 13
-        0, 0, 0, 13, 14, 15, 0, 0, 0, 0, 0, 16, 17, 18, 19, 0, 0, 0, 0, 20, 28, 0,
+        0, 0, 13, 0, 14, 15, 16, 17, 0, 0, 0, 18, 19, 20, 21, 0, 0, 0, 0, 22, 30, 0,
         // State 14
-        0, 0, 0, 0, 0, 0, 0, 32, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0,
+        0, 0, 13, 0, 14, 15, 16, 17, 0, 0, 0, 18, 19, 20, 21, 0, 0, 0, 0, 22, 30, 0,
         // State 15
-        0, 0, 0, 13, 14, 15, 0, 0, 0, 0, 0, 16, 17, 18, 19, 0, 0, 0, 0, 20, 28, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 34, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0,
         // State 16
-        0, 0, 0, 13, 14, 15, 0, 0, 0, 0, 0, 16, 17, 18, 19, 0, 0, 0, 0, 20, 28, 0,
+        0, 0, 13, 0, 14, 15, 16, 17, 0, 0, 0, 18, 19, 20, 21, 0, 0, 0, 0, 22, 30, 0,
         // State 17
-        0, 0, 0, 13, 14, 15, 0, 0, 0, 0, 0, 16, 17, 18, 19, 0, 0, 0, 0, 20, 28, 0,
+        0, 0, 13, 0, 14, 15, 16, 17, 0, 0, 0, 18, 19, 20, 21, 0, 0, 0, 0, 22, 30, 0,
         // State 18
-        0, 0, 0, 13, 14, 15, 0, 0, 0, 0, 0, 16, 17, 18, 19, 0, 0, 0, 0, 20, 28, 0,
+        0, 0, 13, 0, 14, 15, 16, 17, 0, 0, 0, 18, 19, 20, 21, 0, 0, 0, 0, 22, 30, 0,
         // State 19
-        -31, 0, 0, -31, -31, -31, 0, 0, 0, 0, -31, -31, -31, -31, -31, -31, 0, -31, -31, -31, -31, -31,
+        0, 0, 13, 0, 14, 15, 16, 17, 0, 0, 0, 18, 19, 20, 21, 0, 0, 0, 0, 22, 30, 0,
         // State 20
-        -30, 0, 39, -30, -30, -30, 0, 0, 0, 0, -30, -30, -30, -30, -30, -30, 0, -30, -30, -30, -30, -30,
+        0, 0, 13, 0, 14, 15, 16, 17, 0, 0, 0, 18, 19, 20, 21, 0, 0, 0, 0, 22, 30, 0,
         // State 21
-        -16, 0, 0, 13, 14, 15, 0, 0, 0, 0, -16, 16, 17, 18, 19, -16, 0, -16, -16, 20, 21, 41,
+        -32, 0, -32, 0, -32, -32, -32, -32, 0, 0, -32, -32, -32, -32, -32, -32, 0, -32, -32, -32, -32, -32,
         // State 22
-        -16, 0, 0, 13, 14, 15, 0, 0, 0, 0, -16, 16, 17, 18, 19, -16, 0, -16, -16, 20, 21, 43,
+        -31, 0, -31, 42, -31, -31, -31, -31, 0, 0, -31, -31, -31, -31, -31, -31, 0, -31, -31, -31, -31, -31,
         // State 23
-        -16, 0, 0, 13, 14, 15, 0, 0, 0, 0, -16, 16, 17, 18, 19, -16, 0, -16, -16, 20, 21, 0,
+        -16, 0, 13, 0, 14, 15, 16, 17, 0, 0, -16, 18, 19, 20, 21, -16, 0, -16, -16, 22, 23, 44,
         // State 24
-        -16, 0, 0, 13, 14, 15, 0, 0, 0, 0, -16, 16, 17, 18, 19, -16, 0, -16, -16, 20, 21, 47,
+        -16, 0, 13, 0, 14, 15, 16, 17, 0, 0, -16, 18, 19, 20, 21, -16, 0, -16, -16, 22, 23, 46,
         // State 25
-        -16, 0, 0, 13, 14, 15, 0, 0, 0, 0, -16, 16, 17, 18, 19, -16, 0, -16, -16, 20, 21, 49,
+        -16, 0, 13, 0, 14, 15, 16, 17, 0, 0, -16, 18, 19, 20, 21, -16, 0, -16, -16, 22, 23, 0,
         // State 26
-        -34, 0, 0, 0, 0, 0, 0, 0, 0, 0, -34, 0, 0, 0, 0, -34, 0, -34, -34, 0, 0, -34,
+        -16, 0, 13, 0, 14, 15, 16, 17, 0, 0, -16, 18, 19, 20, 21, -16, 0, -16, -16, 22, 23, 50,
         // State 27
-        -30, 0, 0, -30, -30, -30, 0, 0, 0, 0, -30, -30, -30, -30, -30, -30, 0, -30, -30, -30, -30, -30,
+        -16, 0, 13, 0, 14, 15, 16, 17, 0, 0, -16, 18, 19, 20, 21, -16, 0, -16, -16, 22, 23, 52,
         // State 28
-        -16, 0, 0, 13, 14, 15, 0, 0, 0, 0, -16, 16, 17, 18, 19, -16, 0, -16, -16, 20, 28, 0,
+        -36, 0, 0, 0, 0, 0, 0, 0, 0, 0, -36, 0, 0, 0, 0, -36, 0, -36, -36, 0, 0, -36,
         // State 29
-        -23, 0, 0, 0, 0, 0, 0, 0, 0, 0, -23, 0, 0, 0, 0, -23, 0, -23, -23, 0, 0, -23,
+        -31, 0, -31, 0, -31, -31, -31, -31, 0, 0, -31, -31, -31, -31, -31, -31, 0, -31, -31, -31, -31, -31,
         // State 30
-        -25, 0, 0, 0, 0, 0, 0, 0, 0, 0, -25, 0, 0, 0, 0, -25, 0, -25, -25, 0, 0, -25,
+        -16, 0, 13, 0, 14, 15, 16, 17, 0, 0, -16, 18, 19, 20, 21, -16, 0, -16, -16, 22, 30, 0,
         // State 31
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 51, 0,
+        -24, 0, 0, 0, 0, 0, 0, 0, 0, 0, -24, 0, 0, 0, 0, -24, 0, -24, -24, 0, 0, -24,
         // State 32
-        -16, 0, 0, 13, 14, 15, 0, 0, 0, 0, -16, 16, 17, 18, 19, -16, 0, -16, -16, 20, 21, 0,
-        // State 33
-        -13, 0, 0, -13, -13, -13, 0, 0, 0, 0, -13, -13, -13, -13, -13, -13, 0, -13, -13, -13, -13, -13,
-        // State 34
-        -27, 0, 0, 0, 0, 0, 0, 0, 0, 0, -27, 0, 0, 0, 0, -27, 0, -27, -27, 0, 0, -27,
-        // State 35
         -26, 0, 0, 0, 0, 0, 0, 0, 0, 0, -26, 0, 0, 0, 0, -26, 0, -26, -26, 0, 0, -26,
+        // State 33
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0,
+        // State 34
+        -16, 0, 13, 0, 14, 15, 16, 17, 0, 0, -16, 18, 19, 20, 21, -16, 0, -16, -16, 22, 23, 0,
+        // State 35
+        -13, 0, -13, 0, -13, -13, -13, -13, 0, 0, -13, -13, -13, -13, -13, -13, 0, -13, -13, -13, -13, -13,
         // State 36
         -22, 0, 0, 0, 0, 0, 0, 0, 0, 0, -22, 0, 0, 0, 0, -22, 0, -22, -22, 0, 0, -22,
         // State 37
-        -24, 0, 0, 0, 0, 0, 0, 0, 0, 0, -24, 0, 0, 0, 0, -24, 0, -24, -24, 0, 0, -24,
+        -28, 0, 0, 0, 0, 0, 0, 0, 0, 0, -28, 0, 0, 0, 0, -28, 0, -28, -28, 0, 0, -28,
         // State 38
-        0, 0, 0, 13, 14, 15, 0, 0, 0, 0, 0, 16, 17, 18, 19, 0, 0, 0, 0, 20, 28, -7,
+        -27, 0, 0, 0, 0, 0, 0, 0, 0, 0, -27, 0, 0, 0, 0, -27, 0, -27, -27, 0, 0, -27,
         // State 39
-        -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, -1, -1, 0, 0, 0,
+        -23, 0, 0, 0, 0, 0, 0, 0, 0, 0, -23, 0, 0, 0, 0, -23, 0, -23, -23, 0, 0, -23,
         // State 40
-        -16, 0, 0, 13, 14, 15, 0, 0, 0, 0, -16, 16, 17, 18, 19, -16, 0, -16, -16, 20, 21, 0,
+        -25, 0, 0, 0, 0, 0, 0, 0, 0, 0, -25, 0, 0, 0, 0, -25, 0, -25, -25, 0, 0, -25,
         // State 41
-        -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, -3, 0, 0, 0, 0, -3, 0, -3, -3, 0, 0, 0,
+        0, 0, 13, 0, 14, 15, 16, 17, 0, 0, 0, 18, 19, 20, 21, 0, 0, 0, 0, 22, 30, -7,
         // State 42
-        -16, 0, 0, 13, 14, 15, 0, 0, 0, 0, -16, 16, 17, 18, 19, -16, 0, -16, -16, 20, 21, 0,
+        -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, -1, -1, 0, 0, 0,
         // State 43
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -8,
+        -16, 0, 13, 0, 14, 15, 16, 17, 0, 0, -16, 18, 19, 20, 21, -16, 0, -16, -16, 22, 23, 0,
         // State 44
-        -28, 0, 0, 0, 0, 0, 0, 0, 0, 0, -28, 0, 0, 0, 0, -28, 0, -28, -28, 0, 0, 0,
+        -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, -3, 0, 0, 0, 0, -3, 0, -3, -3, 0, 0, 0,
         // State 45
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, -10, -10, 0, 0, 0,
+        -16, 0, 13, 0, 14, 15, 16, 17, 0, 0, -16, 18, 19, 20, 21, -16, 0, -16, -16, 22, 23, 0,
         // State 46
-        -16, 0, 0, 13, 14, 15, 0, 0, 0, 0, -16, 16, 17, 18, 19, -16, 0, -16, -16, 20, 21, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -8,
         // State 47
-        22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 0, -19, 0, -19, -19, 0, 0, 0,
+        -29, 0, 0, 0, 0, 0, 0, 0, 0, 0, -29, 0, 0, 0, 0, -29, 0, -29, -29, 0, 0, 0,
         // State 48
-        -16, 0, 0, 13, 14, 15, 0, 0, 0, 0, -16, 16, 17, 18, 19, -16, 0, -16, -16, 20, 21, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, -10, -10, 0, 0, 0,
         // State 49
-        -18, 0, 0, 0, 0, 0, 0, 0, 0, 0, -18, 0, 0, 0, 0, -18, 0, -18, -18, 0, 0, 0,
+        -16, 0, 13, 0, 14, 15, 16, 17, 0, 0, -16, 18, 19, 20, 21, -16, 0, -16, -16, 22, 23, 0,
         // State 50
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 0,
+        24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, -19, 0, -19, -19, 0, 0, 0,
         // State 51
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 25, 0, 0, 0,
+        -16, 0, 13, 0, 14, 15, 16, 17, 0, 0, -16, 18, 19, 20, 21, -16, 0, -16, -16, 22, 23, 0,
         // State 52
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -6,
+        -18, 0, 0, 0, 0, 0, 0, 0, 0, 0, -18, 0, 0, 0, 0, -18, 0, -18, -18, 0, 0, 0,
         // State 53
-        -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 0, 0, 0, 0, -2, 0, -2, -2, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 0, 0, 0, 0,
         // State 54
-        -4, 0, 0, 0, 0, 0, 0, 0, 0, 0, -4, 0, 0, 0, 0, -4, 0, -4, -4, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 62, 27, 0, 0, 0,
         // State 55
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, -11, -11, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -6,
         // State 56
-        22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 0, -20, 0, -20, -20, 0, 0, 0,
+        -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 0, 0, 0, 0, -2, 0, -2, -2, 0, 0, 0,
         // State 57
-        -14, 0, 0, -14, -14, -14, 0, 0, 0, 0, -14, -14, -14, -14, -14, -14, 0, -14, -14, -14, -14, -14,
+        -4, 0, 0, 0, 0, 0, 0, 0, 0, 0, -4, 0, 0, 0, 0, -4, 0, -4, -4, 0, 0, 0,
         // State 58
-        -15, 0, 0, -15, -15, -15, 0, 0, 0, 0, -15, -15, -15, -15, -15, -15, 0, -15, -15, -15, -15, -15,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, -11, -11, 0, 0, 0,
+        // State 59
+        24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 0, 0, -20, 0, -20, -20, 0, 0, 0,
+        // State 60
+        -14, 0, -14, 0, -14, -14, -14, -14, 0, 0, -14, -14, -14, -14, -14, -14, 0, -14, -14, -14, -14, -14,
+        // State 61
+        -15, 0, -15, 0, -15, -15, -15, -15, 0, 0, -15, -15, -15, -15, -15, -15, 0, -15, -15, -15, -15, -15,
     ];
     const __EOF_ACTION: &'static [i8] = &[
         // State 0
@@ -160,23 +164,23 @@ mod __parse__Command {
         // State 3
         0,
         // State 4
-        -36,
+        -38,
         // State 5
-        -32,
+        -34,
         // State 6
-        -29,
+        -30,
         // State 7
         -12,
         // State 8
-        -35,
+        -37,
         // State 9
         -5,
         // State 10
-        -33,
+        -35,
         // State 11
         -17,
         // State 12
-        0,
+        -33,
         // State 13
         0,
         // State 14
@@ -190,13 +194,13 @@ mod __parse__Command {
         // State 18
         0,
         // State 19
-        -31,
+        0,
         // State 20
-        -30,
+        0,
         // State 21
-        -16,
+        -32,
         // State 22
-        -16,
+        -31,
         // State 23
         -16,
         // State 24
@@ -204,70 +208,76 @@ mod __parse__Command {
         // State 25
         -16,
         // State 26
-        -34,
-        // State 27
-        -30,
-        // State 28
         -16,
+        // State 27
+        -16,
+        // State 28
+        -36,
         // State 29
-        -23,
+        -31,
         // State 30
-        -25,
+        -16,
         // State 31
-        0,
+        -24,
         // State 32
-        0,
-        // State 33
-        -13,
-        // State 34
-        -27,
-        // State 35
         -26,
+        // State 33
+        0,
+        // State 34
+        0,
+        // State 35
+        -13,
         // State 36
         -22,
         // State 37
-        -24,
-        // State 38
-        0,
-        // State 39
-        -1,
-        // State 40
-        -16,
-        // State 41
-        -3,
-        // State 42
-        -16,
-        // State 43
-        0,
-        // State 44
         -28,
+        // State 38
+        -27,
+        // State 39
+        -23,
+        // State 40
+        -25,
+        // State 41
+        0,
+        // State 42
+        -1,
+        // State 43
+        -16,
+        // State 44
+        -3,
         // State 45
-        -10,
+        -16,
         // State 46
-        -16,
+        0,
         // State 47
-        -19,
+        -29,
         // State 48
-        -16,
+        -10,
         // State 49
-        -18,
+        -16,
         // State 50
-        0,
+        -19,
         // State 51
-        0,
+        -16,
         // State 52
-        0,
+        -18,
         // State 53
-        -2,
+        0,
         // State 54
-        -4,
+        0,
         // State 55
-        -11,
+        0,
         // State 56
-        -20,
+        -2,
         // State 57
-        -14,
+        -4,
         // State 58
+        -11,
+        // State 59
+        -20,
+        // State 60
+        -14,
+        // State 61
         -15,
     ];
     const __GOTO: &'static [i8] = &[
@@ -292,55 +302,55 @@ mod __parse__Command {
         // State 9
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 10
-        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 27, 0,
+        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 29, 0,
         // State 11
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 12
-        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 30, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 13
-        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 31, 0,
+        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 32, 0,
         // State 14
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 33, 0,
         // State 15
-        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 35, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 16
-        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 36, 0,
-        // State 17
         0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 37, 0,
-        // State 18
+        // State 17
         0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 38, 0,
+        // State 18
+        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 39, 0,
         // State 19
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 40, 0,
         // State 20
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 41, 0,
         // State 21
-        0, 3, 4, 0, 6, 7, 0, 9, 40, 11, 12, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 22
-        0, 3, 4, 0, 6, 7, 0, 9, 42, 11, 12, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 23
-        0, 44, 0, 0, 6, 45, 0, 9, 0, 11, 12, 0,
+        0, 3, 4, 0, 6, 7, 0, 9, 43, 11, 12, 0,
         // State 24
-        2, 3, 4, 0, 6, 7, 46, 9, 10, 11, 12, 0,
+        0, 3, 4, 0, 6, 7, 0, 9, 45, 11, 12, 0,
         // State 25
-        48, 3, 4, 0, 6, 7, 0, 9, 10, 11, 12, 0,
+        0, 47, 0, 0, 6, 48, 0, 9, 0, 11, 12, 0,
         // State 26
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2, 3, 4, 0, 6, 7, 49, 9, 10, 11, 12, 0,
         // State 27
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        51, 3, 4, 0, 6, 7, 0, 9, 10, 11, 12, 0,
         // State 28
-        0, 0, 0, 0, 6, 50, 0, 9, 0, 11, 12, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 29
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 30
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 6, 53, 0, 9, 0, 11, 12, 0,
         // State 31
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 32
-        2, 3, 4, 52, 6, 7, 8, 9, 10, 11, 12, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 33
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 34
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2, 3, 4, 55, 6, 7, 8, 9, 10, 11, 12, 0,
         // State 35
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 36
@@ -348,33 +358,33 @@ mod __parse__Command {
         // State 37
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 38
-        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 53, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 39
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 40
-        0, 3, 4, 0, 6, 7, 0, 9, 54, 11, 12, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 41
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 6, 0, 0, 9, 0, 11, 56, 0,
         // State 42
-        0, 3, 4, 0, 6, 7, 0, 9, 55, 11, 12, 0,
-        // State 43
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        // State 43
+        0, 3, 4, 0, 6, 7, 0, 9, 57, 11, 12, 0,
         // State 44
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 45
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 3, 4, 0, 6, 7, 0, 9, 58, 11, 12, 0,
         // State 46
-        2, 3, 4, 0, 6, 7, 56, 9, 10, 11, 12, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 47
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 48
-        57, 3, 4, 0, 6, 7, 0, 9, 10, 11, 12, 0,
-        // State 49
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        // State 49
+        2, 3, 4, 0, 6, 7, 59, 9, 10, 11, 12, 0,
         // State 50
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 51
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        60, 3, 4, 0, 6, 7, 0, 9, 10, 11, 12, 0,
         // State 52
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 53
@@ -389,11 +399,18 @@ mod __parse__Command {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         // State 58
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        // State 59
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        // State 60
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        // State 61
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ];
     fn __expected_tokens(__state: usize) -> Vec<::std::string::String> {
         const __TERMINAL: &'static [&'static str] = &[
             r###"AND"###,
             r###"BACKGROUND"###,
+            r###"DOUBLE_QUOTES_WORD"###,
             r###"EQUAL"###,
             r###"ERROR_REDIRECT"###,
             r###"ERROR_REDIRECT_APPEND"###,
@@ -401,7 +418,6 @@ mod __parse__Command {
             r###"INPUT_REDIRECT"###,
             r###"LB"###,
             r###"LP"###,
-            r###"NUMBER"###,
             r###"OR"###,
             r###"OUTPUT_ERROR_REDIRECT"###,
             r###"OUTPUT_ERROR_REDIRECT_APPEND"###,
@@ -533,14 +549,14 @@ mod __parse__Command {
         match *__token {
             Token(6, _) if true => Some(0),
             Token(5, _) if true => Some(1),
-            Token(15, _) if true => Some(2),
-            Token(11, _) if true => Some(3),
-            Token(12, _) if true => Some(4),
-            Token(4, _) if true => Some(5),
-            Token(14, _) if true => Some(6),
-            Token(18, _) if true => Some(7),
-            Token(9, _) if true => Some(8),
-            Token(0, _) if true => Some(9),
+            Token(1, _) if true => Some(2),
+            Token(15, _) if true => Some(3),
+            Token(11, _) if true => Some(4),
+            Token(12, _) if true => Some(5),
+            Token(4, _) if true => Some(6),
+            Token(14, _) if true => Some(7),
+            Token(18, _) if true => Some(8),
+            Token(9, _) if true => Some(9),
             Token(20, _) if true => Some(10),
             Token(7, _) if true => Some(11),
             Token(8, _) if true => Some(12),
@@ -552,7 +568,7 @@ mod __parse__Command {
             Token(13, _) if true => Some(18),
             Token(2, _) if true => Some(19),
             Token(3, _) if true => Some(20),
-            Token(1, _) if true => Some(21),
+            Token(0, _) if true => Some(21),
             _ => None,
         }
     }
@@ -575,35 +591,35 @@ mod __parse__Command {
                 _ => unreachable!(),
             },
             2 => match __token {
-                Token(15, __tok0) => __Symbol::Variant0((__tok0)),
+                Token(1, __tok0) => __Symbol::Variant0((__tok0)),
                 _ => unreachable!(),
             },
             3 => match __token {
-                Token(11, __tok0) => __Symbol::Variant0((__tok0)),
+                Token(15, __tok0) => __Symbol::Variant0((__tok0)),
                 _ => unreachable!(),
             },
             4 => match __token {
-                Token(12, __tok0) => __Symbol::Variant0((__tok0)),
+                Token(11, __tok0) => __Symbol::Variant0((__tok0)),
                 _ => unreachable!(),
             },
             5 => match __token {
-                Token(4, __tok0) => __Symbol::Variant0((__tok0)),
+                Token(12, __tok0) => __Symbol::Variant0((__tok0)),
                 _ => unreachable!(),
             },
             6 => match __token {
-                Token(14, __tok0) => __Symbol::Variant0((__tok0)),
+                Token(4, __tok0) => __Symbol::Variant0((__tok0)),
                 _ => unreachable!(),
             },
             7 => match __token {
-                Token(18, __tok0) => __Symbol::Variant0((__tok0)),
+                Token(14, __tok0) => __Symbol::Variant0((__tok0)),
                 _ => unreachable!(),
             },
             8 => match __token {
-                Token(9, __tok0) => __Symbol::Variant0((__tok0)),
+                Token(18, __tok0) => __Symbol::Variant0((__tok0)),
                 _ => unreachable!(),
             },
             9 => match __token {
-                Token(0, __tok0) => __Symbol::Variant0((__tok0)),
+                Token(9, __tok0) => __Symbol::Variant0((__tok0)),
                 _ => unreachable!(),
             },
             10 => match __token {
@@ -651,7 +667,7 @@ mod __parse__Command {
                 _ => unreachable!(),
             },
             21 => match __token {
-                Token(1, __tok0) => __Symbol::Variant0((__tok0)),
+                Token(0, __tok0) => __Symbol::Variant0((__tok0)),
                 _ => unreachable!(),
             },
             _ => unreachable!(),
@@ -830,20 +846,20 @@ mod __parse__Command {
             }
             27 => {
                 __state_machine::SimulatedReduce::Reduce {
-                    states_to_pop: 3,
-                    nonterminal_produced: 8,
+                    states_to_pop: 2,
+                    nonterminal_produced: 7,
                 }
             }
             28 => {
                 __state_machine::SimulatedReduce::Reduce {
-                    states_to_pop: 1,
+                    states_to_pop: 3,
                     nonterminal_produced: 8,
                 }
             }
             29 => {
                 __state_machine::SimulatedReduce::Reduce {
                     states_to_pop: 1,
-                    nonterminal_produced: 9,
+                    nonterminal_produced: 8,
                 }
             }
             30 => {
@@ -861,13 +877,13 @@ mod __parse__Command {
             32 => {
                 __state_machine::SimulatedReduce::Reduce {
                     states_to_pop: 1,
-                    nonterminal_produced: 10,
+                    nonterminal_produced: 9,
                 }
             }
             33 => {
                 __state_machine::SimulatedReduce::Reduce {
-                    states_to_pop: 2,
-                    nonterminal_produced: 10,
+                    states_to_pop: 1,
+                    nonterminal_produced: 9,
                 }
             }
             34 => {
@@ -876,7 +892,19 @@ mod __parse__Command {
                     nonterminal_produced: 10,
                 }
             }
-            35 => __state_machine::SimulatedReduce::Accept,
+            35 => {
+                __state_machine::SimulatedReduce::Reduce {
+                    states_to_pop: 2,
+                    nonterminal_produced: 10,
+                }
+            }
+            36 => {
+                __state_machine::SimulatedReduce::Reduce {
+                    states_to_pop: 1,
+                    nonterminal_produced: 10,
+                }
+            }
+            37 => __state_machine::SimulatedReduce::Accept,
             _ => panic!("invalid reduction index {}", __reduce_index)
         }
     }
@@ -1036,6 +1064,12 @@ mod __parse__Command {
                 __reduce34(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
             }
             35 => {
+                __reduce35(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
+            }
+            36 => {
+                __reduce36(redirects, input, __action, __lookahead_start, __states, __symbols, ::std::marker::PhantomData::<(&(), &())>)
+            }
+            37 => {
                 // __Command = Command => ActionFn(0);
                 let __sym0 = __pop_Variant1(__symbols);
                 let __start = __sym0.0.clone();
@@ -1425,12 +1459,12 @@ mod __parse__Command {
         _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
-        // Expand = EXPAND, WORD => ActionFn(33);
+        // Expand = EXPAND, WORD => ActionFn(35);
         let __sym1 = __pop_Variant0(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym1.2.clone();
-        let __nt = super::__action33::<>(redirects, input, __sym0, __sym1);
+        let __nt = super::__action35::<>(redirects, input, __sym0, __sym1);
         __symbols.push((__start, __Symbol::Variant4(__nt), __end));
         (2, 4)
     }
@@ -1447,14 +1481,14 @@ mod __parse__Command {
         _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
-        // Expand = EXPAND, LB, WORD, RB => ActionFn(34);
+        // Expand = EXPAND, LB, WORD, RB => ActionFn(36);
         let __sym3 = __pop_Variant0(__symbols);
         let __sym2 = __pop_Variant0(__symbols);
         let __sym1 = __pop_Variant0(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym3.2.clone();
-        let __nt = super::__action34::<>(redirects, input, __sym0, __sym1, __sym2, __sym3);
+        let __nt = super::__action36::<>(redirects, input, __sym0, __sym1, __sym2, __sym3);
         __symbols.push((__start, __Symbol::Variant4(__nt), __end));
         (4, 4)
     }
@@ -1471,14 +1505,14 @@ mod __parse__Command {
         _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
-        // Expand = EXPAND, LP, Command, RP => ActionFn(35);
+        // Expand = EXPAND, LP, Command, RP => ActionFn(37);
         let __sym3 = __pop_Variant0(__symbols);
         let __sym2 = __pop_Variant1(__symbols);
         let __sym1 = __pop_Variant0(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym3.2.clone();
-        let __nt = super::__action35::<>(redirects, input, __sym0, __sym1, __sym2, __sym3);
+        let __nt = super::__action37::<>(redirects, input, __sym0, __sym1, __sym2, __sym3);
         __symbols.push((__start, __Symbol::Variant4(__nt), __end));
         (4, 4)
     }
@@ -1627,7 +1661,7 @@ mod __parse__Command {
         _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
-        // Redirect = OUTPUT_REDIRECT, Words => ActionFn(24);
+        // Redirect = INPUT_REDIRECT, Words => ActionFn(24);
         let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
@@ -1649,7 +1683,7 @@ mod __parse__Command {
         _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
-        // Redirect = ERROR_REDIRECT, Words => ActionFn(25);
+        // Redirect = OUTPUT_REDIRECT, Words => ActionFn(25);
         let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
@@ -1671,7 +1705,7 @@ mod __parse__Command {
         _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
-        // Redirect = OUTPUT_REDIRECT_APPEND, Words => ActionFn(26);
+        // Redirect = ERROR_REDIRECT, Words => ActionFn(26);
         let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
@@ -1693,7 +1727,7 @@ mod __parse__Command {
         _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
-        // Redirect = ERROR_REDIRECT_APPEND, Words => ActionFn(27);
+        // Redirect = OUTPUT_REDIRECT_APPEND, Words => ActionFn(27);
         let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
@@ -1715,7 +1749,7 @@ mod __parse__Command {
         _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
-        // Redirect = OUTPUT_ERROR_REDIRECT_APPEND, Words => ActionFn(28);
+        // Redirect = ERROR_REDIRECT_APPEND, Words => ActionFn(28);
         let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
@@ -1737,7 +1771,7 @@ mod __parse__Command {
         _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
-        // Redirect = OUTPUT_ERROR_REDIRECT, Words => ActionFn(29);
+        // Redirect = OUTPUT_ERROR_REDIRECT_APPEND, Words => ActionFn(29);
         let __sym1 = __pop_Variant7(__symbols);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
@@ -1747,6 +1781,28 @@ mod __parse__Command {
         (2, 7)
     }
     pub(crate) fn __reduce27<
+        'input,
+        'redirects,
+    >(
+        redirects: &'redirects mut Redirects,
+        input: &'input str,
+        __action: i8,
+        __lookahead_start: Option<&usize>,
+        __states: &mut ::std::vec::Vec<i8>,
+        __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
+    ) -> (usize, usize)
+    {
+        // Redirect = OUTPUT_ERROR_REDIRECT, Words => ActionFn(30);
+        let __sym1 = __pop_Variant7(__symbols);
+        let __sym0 = __pop_Variant0(__symbols);
+        let __start = __sym0.0.clone();
+        let __end = __sym1.2.clone();
+        let __nt = super::__action30::<>(redirects, input, __sym0, __sym1);
+        __symbols.push((__start, __Symbol::Variant6(__nt), __end));
+        (2, 7)
+    }
+    pub(crate) fn __reduce28<
         'input,
         'redirects,
     >(
@@ -1769,7 +1825,7 @@ mod __parse__Command {
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (3, 8)
     }
-    pub(crate) fn __reduce28<
+    pub(crate) fn __reduce29<
         'input,
         'redirects,
     >(
@@ -1790,27 +1846,6 @@ mod __parse__Command {
         __symbols.push((__start, __Symbol::Variant1(__nt), __end));
         (1, 8)
     }
-    pub(crate) fn __reduce29<
-        'input,
-        'redirects,
-    >(
-        redirects: &'redirects mut Redirects,
-        input: &'input str,
-        __action: i8,
-        __lookahead_start: Option<&usize>,
-        __states: &mut ::std::vec::Vec<i8>,
-        __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
-        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
-    ) -> (usize, usize)
-    {
-        // Word = WORD => ActionFn(30);
-        let __sym0 = __pop_Variant0(__symbols);
-        let __start = __sym0.0.clone();
-        let __end = __sym0.2.clone();
-        let __nt = super::__action30::<>(redirects, input, __sym0);
-        __symbols.push((__start, __Symbol::Variant4(__nt), __end));
-        (1, 9)
-    }
     pub(crate) fn __reduce30<
         'input,
         'redirects,
@@ -1824,7 +1859,7 @@ mod __parse__Command {
         _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
-        // Word = SINGLE_QUOTES_WORD => ActionFn(31);
+        // Word = WORD => ActionFn(31);
         let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
@@ -1845,8 +1880,8 @@ mod __parse__Command {
         _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
     ) -> (usize, usize)
     {
-        // Word = Expand => ActionFn(32);
-        let __sym0 = __pop_Variant4(__symbols);
+        // Word = SINGLE_QUOTES_WORD => ActionFn(32);
+        let __sym0 = __pop_Variant0(__symbols);
         let __start = __sym0.0.clone();
         let __end = __sym0.2.clone();
         let __nt = super::__action32::<>(redirects, input, __sym0);
@@ -1854,6 +1889,48 @@ mod __parse__Command {
         (1, 9)
     }
     pub(crate) fn __reduce32<
+        'input,
+        'redirects,
+    >(
+        redirects: &'redirects mut Redirects,
+        input: &'input str,
+        __action: i8,
+        __lookahead_start: Option<&usize>,
+        __states: &mut ::std::vec::Vec<i8>,
+        __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
+    ) -> (usize, usize)
+    {
+        // Word = DOUBLE_QUOTES_WORD => ActionFn(33);
+        let __sym0 = __pop_Variant0(__symbols);
+        let __start = __sym0.0.clone();
+        let __end = __sym0.2.clone();
+        let __nt = super::__action33::<>(redirects, input, __sym0);
+        __symbols.push((__start, __Symbol::Variant4(__nt), __end));
+        (1, 9)
+    }
+    pub(crate) fn __reduce33<
+        'input,
+        'redirects,
+    >(
+        redirects: &'redirects mut Redirects,
+        input: &'input str,
+        __action: i8,
+        __lookahead_start: Option<&usize>,
+        __states: &mut ::std::vec::Vec<i8>,
+        __symbols: &mut ::std::vec::Vec<(usize,__Symbol<'input>,usize)>,
+        _: ::std::marker::PhantomData<(&'input (), &'redirects ())>,
+    ) -> (usize, usize)
+    {
+        // Word = Expand => ActionFn(34);
+        let __sym0 = __pop_Variant4(__symbols);
+        let __start = __sym0.0.clone();
+        let __end = __sym0.2.clone();
+        let __nt = super::__action34::<>(redirects, input, __sym0);
+        __symbols.push((__start, __Symbol::Variant4(__nt), __end));
+        (1, 9)
+    }
+    pub(crate) fn __reduce34<
         'input,
         'redirects,
     >(
@@ -1874,7 +1951,7 @@ mod __parse__Command {
         __symbols.push((__start, __Symbol::Variant7(__nt), __end));
         (1, 10)
     }
-    pub(crate) fn __reduce33<
+    pub(crate) fn __reduce35<
         'input,
         'redirects,
     >(
@@ -1896,7 +1973,7 @@ mod __parse__Command {
         __symbols.push((__start, __Symbol::Variant7(__nt), __end));
         (2, 10)
     }
-    pub(crate) fn __reduce34<
+    pub(crate) fn __reduce36<
         'input,
         'redirects,
     >(
@@ -1922,7 +1999,6 @@ pub use self::__parse__Command::CommandParser;
 #[cfg_attr(rustfmt, rustfmt_skip)]
 mod __intern_token {
     #![allow(unused_imports)]
-    use std::str::FromStr;
     use crate::sh::sh_ast::*;
     #[allow(unused_extern_crates)]
     extern crate lalrpop_util as __lalrpop_util;
@@ -1947,10 +2023,10 @@ mod __intern_token {
     impl __MatcherBuilder {
         pub fn new() -> __MatcherBuilder {
             let __strs: &[&str] = &[
-                "^([0-9]+)",
                 "^([\t-\r \u{85}\u{a0}\u{1680}\u{2000}-\u{200a}\u{2028}-\u{2029}\u{202f}\u{205f}\u{3000}]+)",
+                "^(\"(?:[\u{0}-!\\#-\\[\\]-\u{10ffff}]|\\\\[\u{0}-\t\u{b}-\u{10ffff}])*\")",
                 "^(\'(?:[\u{0}-\\&\\(-\\[\\]-\u{10ffff}]|\\\\[\u{0}-\t\u{b}-\u{10ffff}])*\')",
-                "^((?:[\u{0}-\u{8}\u{e}-\u{1f}!\\#%\\*-;\\?-\\[\\]-z\\~-\u{84}\u{86}-\u{9f}¡-ᙿᚁ-\u{1fff}\u{200b}-‧\u{202a}-\u{202e}‰-⁞\u{2060}-\u{2fff}、-\u{10ffff}]|\\\\[\u{0}-\t\u{b}-\u{10ffff}])*)",
+                "^((?:[\u{0}-\u{8}\u{e}-\u{1f}!\\#%\\*-;\\?-\\[\\]-z\\~-\u{84}\u{86}-\u{9f}¡-ᙿᚁ-\u{1fff}\u{200b}-‧\u{202a}-\u{202e}‰-⁞\u{2060}-\u{2fff}、-\u{10ffff}]|\\\\[\u{0}-\t\u{b}-\u{10ffff}])+)",
                 "^(\\$)",
                 "^(\\&)",
                 "^(\\&\\&)",
@@ -1972,10 +2048,10 @@ mod __intern_token {
             ];
             let __regex_set = __regex::RegexSet::new(__strs).unwrap();
             let __regex_vec = vec![
-                __regex::Regex::new("^([0-9]+)").unwrap(),
                 __regex::Regex::new("^([\t-\r \u{85}\u{a0}\u{1680}\u{2000}-\u{200a}\u{2028}-\u{2029}\u{202f}\u{205f}\u{3000}]+)").unwrap(),
+                __regex::Regex::new("^(\"(?:[\u{0}-!\\#-\\[\\]-\u{10ffff}]|\\\\[\u{0}-\t\u{b}-\u{10ffff}])*\")").unwrap(),
                 __regex::Regex::new("^(\'(?:[\u{0}-\\&\\(-\\[\\]-\u{10ffff}]|\\\\[\u{0}-\t\u{b}-\u{10ffff}])*\')").unwrap(),
-                __regex::Regex::new("^((?:[\u{0}-\u{8}\u{e}-\u{1f}!\\#%\\*-;\\?-\\[\\]-z\\~-\u{84}\u{86}-\u{9f}¡-ᙿᚁ-\u{1fff}\u{200b}-‧\u{202a}-\u{202e}‰-⁞\u{2060}-\u{2fff}、-\u{10ffff}]|\\\\[\u{0}-\t\u{b}-\u{10ffff}])*)").unwrap(),
+                __regex::Regex::new("^((?:[\u{0}-\u{8}\u{e}-\u{1f}!\\#%\\*-;\\?-\\[\\]-z\\~-\u{84}\u{86}-\u{9f}¡-ᙿᚁ-\u{1fff}\u{200b}-‧\u{202a}-\u{202e}‰-⁞\u{2060}-\u{2fff}、-\u{10ffff}]|\\\\[\u{0}-\t\u{b}-\u{10ffff}])+)").unwrap(),
                 __regex::Regex::new("^(\\$)").unwrap(),
                 __regex::Regex::new("^(\\&)").unwrap(),
                 __regex::Regex::new("^(\\&\\&)").unwrap(),
@@ -2251,7 +2327,7 @@ fn __action12<
         let s = CommandPtr::new (Command::SimpleCommand {
             assignments: a,
             parameters: p,
-            redirects: redirects.drain(..).collect()
+            redirects: RedirectsPtr::new (redirects.drain(..).collect())
         });
         s
     }
@@ -2264,7 +2340,7 @@ fn __action13<
 >(
     redirects: &'redirects mut Redirects,
     input: &'input str,
-    (_, mut p, _): (usize, ParametersPtr, usize),
+    (_, p, _): (usize, ParametersPtr, usize),
 ) -> CommandPtr
 {
     {
@@ -2274,7 +2350,7 @@ fn __action13<
         let s = CommandPtr::new (Command::SimpleCommand {
             assignments:AssignmentsPtr::new (Assignments::new ()),
             parameters: p,
-            redirects: redirects.drain(..).collect()
+            redirects: RedirectsPtr::new (redirects.drain(..).collect())
         });
         // redirects.clear ();
         s
@@ -2469,9 +2545,8 @@ fn __action24<
 ) -> RedirectPtr
 {
     {
-        let r = RedirectPtr::new (Redirect::Output {
-            words: w,
-            append: false
+        let r = RedirectPtr::new (Redirect::Input {
+            words: w
         });
         r
     }
@@ -2489,7 +2564,7 @@ fn __action25<
 ) -> RedirectPtr
 {
     {
-        let r = RedirectPtr::new (Redirect::Error {
+        let r = RedirectPtr::new (Redirect::Output {
             words: w,
             append: false
         });
@@ -2509,9 +2584,9 @@ fn __action26<
 ) -> RedirectPtr
 {
     {
-        let r = RedirectPtr::new (Redirect::Output {
+        let r = RedirectPtr::new (Redirect::Error {
             words: w,
-            append: true
+            append: false
         });
         r
     }
@@ -2529,7 +2604,7 @@ fn __action27<
 ) -> RedirectPtr
 {
     {
-        let r = RedirectPtr::new (Redirect::Error {
+        let r = RedirectPtr::new (Redirect::Output {
             words: w,
             append: true
         });
@@ -2549,7 +2624,7 @@ fn __action28<
 ) -> RedirectPtr
 {
     {
-        let r = RedirectPtr::new (Redirect::OutputAndError {
+        let r = RedirectPtr::new (Redirect::Error {
             words: w,
             append: true
         });
@@ -2571,7 +2646,7 @@ fn __action29<
     {
         let r = RedirectPtr::new (Redirect::OutputAndError {
             words: w,
-            append: false
+            append: true
         });
         r
     }
@@ -2579,6 +2654,26 @@ fn __action29<
 
 #[allow(unused_variables)]
 fn __action30<
+    'input,
+    'redirects,
+>(
+    redirects: &'redirects mut Redirects,
+    input: &'input str,
+    (_, _, _): (usize, &'input str, usize),
+    (_, w, _): (usize, WordsPtr, usize),
+) -> RedirectPtr
+{
+    {
+        let r = RedirectPtr::new (Redirect::OutputAndError {
+            words: w,
+            append: false
+        });
+        r
+    }
+}
+
+#[allow(unused_variables)]
+fn __action31<
     'input,
     'redirects,
 >(
@@ -2593,7 +2688,7 @@ fn __action30<
 }
 
 #[allow(unused_variables)]
-fn __action31<
+fn __action32<
     'input,
     'redirects,
 >(
@@ -2608,7 +2703,23 @@ fn __action31<
 }
 
 #[allow(unused_variables)]
-fn __action32<
+fn __action33<
+    'input,
+    'redirects,
+>(
+    redirects: &'redirects mut Redirects,
+    input: &'input str,
+    (_, sq, _): (usize, &'input str, usize),
+) -> WordPtr
+{
+    {
+        println! ("Doubvle quotes");
+        WordPtr::new (Word::Quotes(sq[1..sq.len()-1].to_string()))
+    }
+}
+
+#[allow(unused_variables)]
+fn __action34<
     'input,
     'redirects,
 >(
@@ -2621,41 +2732,41 @@ fn __action32<
 }
 
 #[allow(unused_variables)]
-fn __action33<
-    'input,
-    'redirects,
->(
-    redirects: &'redirects mut Redirects,
-    input: &'input str,
-    (_, _, _): (usize, &'input str, usize),
-    (_, w, _): (usize, &'input str, usize),
-) -> WordPtr
-{
-    {
-        WordPtr::new (Word::Expand (w.to_string()))
-    }
-}
-
-#[allow(unused_variables)]
-fn __action34<
-    'input,
-    'redirects,
->(
-    redirects: &'redirects mut Redirects,
-    input: &'input str,
-    (_, _, _): (usize, &'input str, usize),
-    (_, _, _): (usize, &'input str, usize),
-    (_, w, _): (usize, &'input str, usize),
-    (_, _, _): (usize, &'input str, usize),
-) -> WordPtr
-{
-    {
-        WordPtr::new (Word::Expand (w.to_string()))
-    }
-}
-
-#[allow(unused_variables)]
 fn __action35<
+    'input,
+    'redirects,
+>(
+    redirects: &'redirects mut Redirects,
+    input: &'input str,
+    (_, _, _): (usize, &'input str, usize),
+    (_, w, _): (usize, &'input str, usize),
+) -> WordPtr
+{
+    {
+        WordPtr::new (Word::Expand (w.to_string()))
+    }
+}
+
+#[allow(unused_variables)]
+fn __action36<
+    'input,
+    'redirects,
+>(
+    redirects: &'redirects mut Redirects,
+    input: &'input str,
+    (_, _, _): (usize, &'input str, usize),
+    (_, _, _): (usize, &'input str, usize),
+    (_, w, _): (usize, &'input str, usize),
+    (_, _, _): (usize, &'input str, usize),
+) -> WordPtr
+{
+    {
+        WordPtr::new (Word::Expand (w.to_string()))
+    }
+}
+
+#[allow(unused_variables)]
+fn __action37<
     'input,
     'redirects,
 >(
