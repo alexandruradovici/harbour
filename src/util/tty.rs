@@ -23,7 +23,12 @@ pub fn read_drivers () -> Result<Vec<TTYDriver>, io::Error>
 			let minor_str:Vec<&str> = driver_parts_str[3].split ("-").collect ();
 			let tty_driver = TTYDriver {
 				driver: driver_parts_str[0].to_string (),
-				file_entry: driver_parts_str[1].to_string (),
+				file_entry: if let Ok (inf) = fs::metadata(driver_parts_str[1]) {
+					if inf.is_dir () { format! ("{}/", driver_parts_str[1]) } else { driver_parts_str[1].to_string () }	
+				}
+				else {
+					driver_parts_str[1].to_string ()
+				},
 				major: driver_parts_str[2].parse::<u8> ().unwrap_or (0),
 				minor_min: minor_str[0].parse::<u32>().unwrap_or (0),
 				minor_max: if minor_str.len () > 1 { minor_str[1].parse::<u32>().unwrap_or(0) } else { 0 },

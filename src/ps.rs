@@ -97,7 +97,7 @@ fn create_process (pid:u64) -> Process {
 	// command
 	match fs::read_to_string (format!("/proc/{}/cmdline", pid)) {
 		Ok (command) => {
-			process.command = command;
+			process.command = str::replace (&command, "\0", " ");
 			if process.command.len() == 0 {
 				process.kernel_thread = true;
 			}
@@ -245,6 +245,14 @@ pub fn execute (options:Options) -> Result<(), io::Error>
 				/*
 				the default is UPPERCASE and {:<} format
 				*/
+				"comm" => {
+					row.add_cell ("COMMAND");
+					"{:<}"
+				},
+				"s" | "state" => {
+					row.add_cell ("S");
+					"{:<}"
+				},
 				_ => {
 					row.add_cell (column.to_uppercase ());
 					"{:<}"
@@ -276,6 +284,8 @@ pub fn execute (options:Options) -> Result<(), io::Error>
 						row.add_cell (&tty_name)
 					},
 					"time" => row.add_cell (format! ("{:0>2}:{:0>2}:{:0>2}", process.time / 3600, (process.time % 3600) / 60, process.time % 60)),
+					"comm" => row.add_cell (&process.command),
+					"s" | "state" => row.add_cell (process.state),
 					_ => row.add_cell ("?")
 				};
 			}
