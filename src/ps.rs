@@ -183,7 +183,7 @@ fn read_processes (options: &Options) -> Result<Vec<Process>, io::Error>
 				if let Ok (pid) = pid_str.parse::<u64> () {
 					// println! ("{}", pid_str);
 					let process = create_process (pid);
-					if options.show_all || options.username != None || (process.uid == self_uid && process.tty.nr == self_tty_nr) {
+					if options.show_all || (options.username != None && process.uid == self_uid) || (process.uid == self_uid && process.tty.nr == self_tty_nr) {
 						processes.push (process);
 					}
 				}
@@ -207,7 +207,7 @@ command! ("ps", "Report process status", execute,
 
 pub fn execute (options:Options) -> Result<(), io::Error>
 {
-	tty::read_drivers ();
+	let drivers = tty::read_drivers ()?;
 	let mut errno = 0;
 
 	let columns:Vec<&str> = if let Some (columns) = &options.columns {
@@ -265,7 +265,16 @@ pub fn execute (options:Options) -> Result<(), io::Error>
 					"pid" => row.add_cell (process.pid),
 					"cmd" => row.add_cell (&process.name),
 					"uid" => row.add_cell (process.uid),
-					"tty" => row.add_cell (&process.tty.name),
+					"tty" => {
+						let mut tty_name = process.tty.name.to_string();
+						for driver in drivers.iter () {
+							if driver.major == process.tty.major && process.tty.minor >= driver.minor_min && process.tty.minor <= driver.minor_max {
+								tty_name = format! ("{}{}", if &driver.file_entry[0..5] == "/dev/" { &driver.file_entry[5..] } else { &driver.file_entry }, process.tty.minor);
+								println! ("{:?}", &process);
+							}
+						}
+						row.add_cell (&tty_name)
+					},
 					"time" => row.add_cell (format! ("{:0>2}:{:0>2}:{:0>2}", process.time / 3600, (process.time % 3600) / 60, process.time % 60)),
 					_ => row.add_cell ("?")
 				};
