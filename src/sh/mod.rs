@@ -32,8 +32,7 @@ pub fn execute (options: Options) -> Result<(), io::Error>
 
 fn parse_command (options: &Options, command_str:&str) -> Result<(), io::Error>
 {
-	let mut redirects: Redirects = Redirects::new ();
-	let command = sh_rules::CommandParser::new().parse(&mut redirects, command_str);
+	let command = sh_rules::CommandParser::new().parse(command_str);
 	match command {
 		Ok (s) => println! ("{:#?}", s),
 		Err (e) => eprintln! ("{}", e)

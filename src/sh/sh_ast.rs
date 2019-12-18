@@ -22,7 +22,8 @@ pub enum Word {
     Word (String),
     Quotes (String),
     Expand (String),
-    Execute (Box<Command>)
+    Execute (CommandPtr),
+    Redirect (RedirectPtr)
 }
 
 pub type WordPtr = Box<Word>;
@@ -57,10 +58,10 @@ pub enum Command {
         parameters: ParametersPtr,
         redirects: RedirectsPtr
     },
-    PipeCommand (Box<Command>, Box<Command>),
-    SequentialCommand (Box<Command>, Box<Command>),
-    AndCommand (Box<Command>, Box<Command>),
-    OrCommand (Box<Command>, Box<Command>)
+    PipeCommand (CommandPtr, CommandPtr),
+    SequentialCommand (CommandPtr, CommandPtr),
+    AndCommand (CommandPtr, CommandPtr),
+    OrCommand (CommandPtr, CommandPtr)
 }
 
 pub type CommandPtr = Box<Command>;
